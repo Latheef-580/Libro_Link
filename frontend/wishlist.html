@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Wishlist - LibroLink</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/components.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="/">
+                    <img src="assets/images/naruto-reading.jpg" alt="Naruto Reading" style="width: 60px; height: 60px; object-fit: cover; border-radius: 6px;">
+                    <span class="book-themed">LibroLink</span>
+                </a>
+            </div>
+            
+            <div class="nav-search">
+                <div class="search-container">
+                    <input type="text" id="searchInput" placeholder="Search for books, authors, genres...">
+                    <button class="search-btn" id="searchBtn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="nav-links">
+                <a href="/books" class="nav-link">Browse Books</a>
+                <a href="/wishlist" class="nav-link active" id="wishlistLink">
+                    <i class="fas fa-heart"></i>
+                    <span class="wishlist-count">3</span>
+                </a>
+                <a href="/cart.html" class="nav-link" id="cartLink">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">0</span>
+                </a>
+                <div class="nav-user-menu" id="navUserMenu">
+                    <div class="dropdown">
+                        <button class="dropdown-toggle">
+                            <img src="/assets/images/default-avatar.png" alt="Profile" class="user-avatar">
+                            <span id="userDisplayName">User</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="dropdown-menu">
+                            <a href="/profile"><i class="fas fa-user"></i> Profile</a>
+                            <a href="/seller-dashboard"><i class="fas fa-store"></i> Sell Books</a>
+                            <a href="/wishlist" class="active"><i class="fas fa-heart"></i> Wishlist</a>
+                            <a href="/cart.html"><i class="fas fa-shopping-cart"></i> Cart</a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Wishlist Section -->
+    <section class="wishlist-section" style="background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%); min-height: 100vh;">
+        <div class="container" style="padding-top: 40px; padding-bottom: 40px;">
+            <div class="wishlist-header" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; margin-bottom: 32px;">
+                <div class="header-content">
+                    <h1 style="font-size: 2.2rem; color: #667eea; display: flex; align-items: center; gap: 12px;"><i class="fas fa-heart"></i> My Wishlist</h1>
+                    <p style="color: #888; margin-top: 8px;">Keep track of books you want to read or buy</p>
+                </div>
+                <div class="header-actions" style="display: flex; flex-direction: column; gap: 12px; align-items: flex-end;">
+                    <div class="wishlist-stats" style="display: flex; gap: 24px;">
+                        <span class="stat-item">
+                            <span class="stat-number" id="totalItems" style="font-size: 1.3rem; color: #222;">3</span>
+                            <span class="stat-label" style="color: #888;">Items</span>
+                        </span>
+                        <span class="stat-item">
+                            <span class="stat-number" id="totalValue" style="font-size: 1.3rem; color: #222;">$127.50</span>
+                            <span class="stat-label" style="color: #888;">Total Value</span>
+                        </span>
+                    </div>
+                    <div class="header-controls" style="display: flex; gap: 10px;">
+                        <!--<button class="btn btn-outline" id="shareWishlistBtn" title="Share your wishlist">
+                            <i class="fas fa-share"></i> Share
+                        </button>-->
+                        <button class="btn btn-danger" id="clearWishlistBtn" title="Clear all items">
+                            <i class="fas fa-trash"></i> Clear All
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Wishlist Filters Toolbar -->
+            <div class="toolbar" style="margin-bottom: 32px;">
+                <div class="toolbar-actions">
+                    <div class="filter-group">
+                        <label for="sortFilter">Sort by:</label>
+                        <select id="sortFilter" class="sort-select">
+                            <option value="date-added">Date Added</option>
+                            <option value="price-low">Price: Low to High</option>
+                            <option value="price-high">Price: High to Low</option>
+                            <option value="title">Title A-Z</option>
+                            <option value="author">Author A-Z</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="categoryFilter">Category:</label>
+                        <select id="categoryFilter" class="sort-select">
+                            <option value="all">All Categories</option>
+                            <option value="fiction">Fiction</option>
+                            <option value="non-fiction">Non-Fiction</option>
+                            <option value="textbooks">Textbooks</option>
+                            <option value="children">Children's Books</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="availabilityFilter">Availability:</label>
+                        <select id="availabilityFilter" class="sort-select">
+                            <option value="all">All Items</option>
+                            <option value="available">Available</option>
+                            <option value="out-of-stock">Out of Stock</option>
+                            <option value="price-drop">Price Dropped</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: flex; flex-wrap: wrap; gap: 32px; align-items: flex-start;">
+                <!-- Wishlist Content -->
+                <div class="wishlist-content" id="wishlistContent" style="flex: 2 1 600px;">
+                    <div class="wishlist-grid" id="wishlistGrid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 28px;">
+                        <!-- Sample Wishlist Items (modern card style) -->
+                        <div class="wishlist-item" data-book-id="1">
+                            <div class="item-image">
+                                <img src="/assets/images/great-gatsby.jpg" alt="The Great Gatsby">
+                                <div class="availability-badge available">Available</div>
+                            </div>
+                            <div class="item-details">
+                                <div class="item-header">
+                                    <h3 class="item-title">The Great Gatsby</h3>
+                                    <button class="remove-btn" data-book-id="1">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                                <p class="item-author">by F. Scott Fitzgerald</p>
+                                <p class="item-category">Classic Fiction</p>
+                                <div class="item-condition">
+                                    <span class="condition-badge good">Good Condition</span>
+                                </div>
+                                <div class="item-meta">
+                                    <span class="added-date">Added 3 days ago</span>
+                                    <span class="seller-info">Sold by BookLover123</span>
+                                </div>
+                            </div>
+                            <div class="item-price">
+                                <div class="price-info">
+                                    <span class="current-price">₹12.99</span>
+                                    <span class="original-price">₹15.99</span>
+                                    <span class="discount">19% off</span>
+                                </div>
+                                <div class="price-alerts">
+                                    <span class="price-drop-alert">
+                                        <i class="fas fa-trending-down"></i>
+                                        Price dropped ₹3.00
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="item-actions">
+                                <button class="btn btn-primary btn-full" id="addToCartBtn1">
+                                    <i class="fas fa-shopping-cart"></i>
+                                    Add to Cart
+                                </button>
+                                <button class="btn btn-outline btn-small" id="viewBookBtn1">
+                                    View Details
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="wishlist-item" data-book-id="2">
+                            <div class="item-image">
+                                <img src="/assets/images/mockingbird.jpg" alt="To Kill a Mockingbird">
+                                <div class="availability-badge out-of-stock">Out of Stock</div>
+                            </div>
+                            <div class="item-details">
+                                <div class="item-header">
+                                    <h3 class="item-title">To Kill a Mockingbird</h3>
+                                    <button class="remove-btn" data-book-id="2">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                                <p class="item-author">by Harper Lee</p>
+                                <p class="item-category">Classic Literature</p>
+                                <div class="item-condition">
+                                    <span class="condition-badge excellent">Excellent Condition</span>
+                                </div>
+                                <div class="item-meta">
+                                    <span class="added-date">Added 1 week ago</span>
+                                    <span class="seller-info">Sold by ClassicBooks</span>
+                                </div>
+                            </div>
+                            <div class="item-price">
+                                <div class="price-info">
+                                    <span class="current-price">$18.50</span>
+                                </div>
+                                <div class="stock-info">
+                                    <span class="stock-status">Currently unavailable</span>
+                                </div>
+                            </div>
+                            <div class="item-actions">
+                                <button class="btn btn-secondary btn-full" disabled>
+                                    <i class="fas fa-clock"></i>
+                                    Notify When Available
+                                </button>
+                                <button class="btn btn-outline btn-small" id="viewBookBtn2">
+                                    View Details
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="wishlist-item" data-book-id="3">
+                            <div class="item-image">
+                                <img src="/assets/images/javascript.jpg" alt="JavaScript: The Good Parts">
+                                <div class="availability-badge available">Available</div>
+                            </div>
+                            <div class="item-details">
+                                <div class="item-header">
+                                    <h3 class="item-title">JavaScript: The Good Parts</h3>
+                                    <button class="remove-btn" data-book-id="3">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                                <p class="item-author">by Douglas Crockford</p>
+                                <p class="item-category">Programming</p>
+                                <div class="item-condition">
+                                    <span class="condition-badge fair">Fair Condition</span>
+                                </div>
+                                <div class="item-meta">
+                                    <span class="added-date">Added 2 weeks ago</span>
+                                    <span class="seller-info">Sold by TechBooks2024</span>
+                                </div>
+                            </div>
+                            <div class="item-price">
+                                <div class="price-info">
+                                    <span class="current-price">$96.01</span>
+                                </div>
+                            </div>
+                            <div class="item-actions">
+                                <button class="btn btn-primary btn-full" id="addToCartBtn3">
+                                    <i class="fas fa-shopping-cart"></i>
+                                    Add to Cart
+                                </button>
+                                <button class="btn btn-outline btn-small" id="viewBookBtn3">
+                                    View Details
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Empty State -->
+                    <div class="empty-wishlist" id="emptyWishlist" style="display: none;">
+                        <div class="empty-state" style="padding: 80px 20px; background: white; border-radius: 16px; box-shadow: 0 8px 32px rgba(102,126,234,0.08);">
+                            <i class="fas fa-heart-broken" style="font-size: 64px; color: #dc3545; margin-bottom: 18px;"></i>
+                            <h3 style="font-size: 1.6rem; color: #333;">Your wishlist is empty</h3>
+                            <p style="color: #888; margin-bottom: 24px;">Start browsing and add books you'd like to read or buy later</p>
+                            <a href="/books" class="btn btn-primary btn-large">
+                                <i class="fas fa-search"></i>
+                                Browse Books
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Wishlist Summary Card -->
+                <aside class="wishlist-summary" style="flex: 1 1 320px; max-width: 360px; position: sticky; top: 100px; align-self: flex-start;">
+                    <div class="summary-card" style="background: white; border-radius: 16px; box-shadow: 0 8px 32px rgba(102,126,234,0.08); padding: 32px 24px;">
+                        <h3 style="color: #667eea; font-size: 1.3rem; margin-bottom: 18px;">Wishlist Summary</h3>
+                        <div class="summary-stats" style="margin-bottom: 18px;">
+                            <div class="stat-row" style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span>Total Items:</span>
+                                <span id="summaryTotalItems">0</span>
+                            </div>
+                            <div class="stat-row" style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span>Available Items:</span>
+                                <span id="summaryAvailable">0</span>
+                            </div>
+                            <div class="stat-row" style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span>Out of Stock:</span>
+                                <span id="summaryOutOfStock">0</span>
+                            </div>
+                            <div class="stat-row total" style="display: flex; justify-content: space-between; font-weight: 600; color: #222;">
+                                <span>Total Value:</span>
+                                <span id="summaryTotalValue">₹0.00</span>
+                            </div>
+                        </div>
+                        <div class="summary-actions">
+                            <button class="btn btn-primary btn-full" onclick="addAllAvailableToCart()">
+                                <i class="fas fa-shopping-cart"></i>
+                                Add All Available to Cart
+                            </button>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </section>
+
+    <!-- Recommendations Section -->
+    <section class="recommendations-section" style="background: #fff; padding: 60px 0 40px 0;">
+        <div class="container">
+            <div class="section-header" style="margin-bottom: 32px;">
+                <h2 style="color: #667eea;">You Might Also Like</h2>
+                <p style="color: #888;">Based on your wishlist preferences</p>
+            </div>
+            <div class="recommendations-grid" id="recommendationsGrid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px;">
+                <!-- Recommendations will be loaded dynamically -->
+                <div class="book-card-loading">
+                    <div class="loading-spinner"></div>
+                    <p>Loading recommendations...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Share Modal -->
+    <div class="modal" id="shareModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Share Your Wishlist</h3>
+                <button class="modal-close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Copy your wishlist link and share it with friends:</p>
+                <div class="share-link-row" style="display: flex; gap: 10px; align-items: center;">
+                    <input type="text" id="shareUrl" value="https://librolink.com/wishlist/YourUsername" readonly style="flex: 1; padding: 8px;">
+                    <button class="btn btn-outline" id="copyShareBtn">
+                        <i class="fas fa-copy"></i> Copy Link
+                    </button>
+                </div>
+                <div id="copySuccessMsg" style="color: #28a745; margin-top: 10px; display: none;">Copied!</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module" src="scripts/main.js"></script>
+    <script type="module" src="scripts/wishlist.js"></script>
+    <script type="module" src="scripts/auth.js"></script>
+</body>
+</html>

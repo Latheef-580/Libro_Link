@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Details | LibroLink</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/components.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="/">
+                    <img src="assets/images/naruto-reading.jpg" alt="Naruto Reading" style="width: 60px; height: 60px; object-fit: cover; border-radius: 6px;">
+                    <span class="book-themed">LibroLink</span>
+                </a>
+            </div>
+            
+            <div class="nav-search">
+                <div class="search-container">
+                    <input type="text" id="searchInput" placeholder="Search for books, authors, genres...">
+                    <button class="search-btn" id="searchBtn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="nav-links">
+                <a href="/books" class="nav-link active">Browse Books</a>
+                <a href="/wishlist" class="nav-link" id="wishlistLink">
+                    <i class="fas fa-heart"></i>
+                    <span class="wishlist-count">0</span>
+                </a>
+                <a href="/cart.html" class="nav-link" id="cartLink">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">0</span>
+                </a>
+                <div class="nav-user" id="navUser">
+                    <a href="/login" class="nav-link">Login</a>
+                    <a href="/register" class="nav-link btn-primary">Sign Up</a>
+                </div>
+                <div class="nav-user-menu" id="navUserMenu" style="display: none;">
+                    <div class="dropdown">
+                        <button class="dropdown-toggle">
+                            <img src="/assets/images/default-avatar.png" alt="Profile" class="user-avatar">
+                            <span id="userDisplayName">User</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="dropdown-menu">
+                            <a href="/profile"><i class="fas fa-user"></i> Profile</a>
+                            <a href="/seller-dashboard"><i class="fas fa-store"></i> Sell Books</a>
+                            <a href="/wishlist"><i class="fas fa-heart"></i> Wishlist</a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="book-details-container">
+        <div class="container">
+            <div class="book-details-content">
+                <div class="book-image-section">
+                    <img id="book-cover" src="assets/images/placeholder-book.png" alt="Book Cover" />
+                    <div class="book-actions">
+                        <button id="add-to-wishlist" class="btn btn-outline">
+                            <i class="fas fa-heart"></i>
+                            Add to Wishlist
+                        </button>
+                        <button id="add-to-cart" class="btn btn-primary">
+                            <i class="fas fa-shopping-cart"></i>
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="book-info-section">
+                    <h1 id="book-title">Book Title</h1>
+                    <p id="book-author" class="book-author">by Author Name</p>
+                    
+                    <div class="book-meta">
+                        <div class="meta-item">
+                            <span class="meta-label">Category:</span>
+                            <span id="book-category">Genre</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Condition:</span>
+                            <span id="book-condition">Good</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Price:</span>
+                            <span id="book-price" class="price">$0.00</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Seller:</span>
+                            <span id="book-seller">Seller Name</span>
+                        </div>
+                    </div>
+                    <div id="book-preview-text" style="margin: 18px 0 0 0; display: none;"></div>
+                    
+                    <div class="book-rating">
+                        <div id="book-rating-stars" class="rating-stars"></div>
+                        <span id="book-rating-text">No ratings yet</span>
+                    </div>
+                    
+                    <div class="book-description">
+                        <h3>Description</h3>
+                        <p id="book-description-text">Book description goes here...</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="book-reviews-section">
+                <h3>Reviews</h3>
+                <div id="reviews-list">
+                    <p>No reviews yet.</p>
+                </div>
+                <form id="review-form" class="review-form">
+                    <h4>Leave a Review</h4>
+                    <div class="form-group">
+                        <label for="rating">Rating:</label>
+                        <select id="rating" name="rating" class="form-control">
+                            <option value="5">5 Stars</option>
+                            <option value="4">4 Stars</option>
+                            <option value="3">3 Stars</option>
+                            <option value="2">2 Stars</option>
+                            <option value="1">1 Star</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="comment">Comment:</label>
+                        <textarea id="comment" name="comment" rows="3" maxlength="500" class="form-control" placeholder="Share your thoughts about this book..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit Review</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>LibroLink</h4>
+                    <p>Your trusted marketplace for buying and selling books.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="/how-to-buy.html">How to Buy</a></li>
+                        <li><a href="/payment-options.html">Payment Options</a></li>
+                        <li><a href="/shipping-info.html">Shipping Info</a></li>
+                        <li><a href="/seller-guide.html">Seller Guide</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="/help-center.html">Help Center</a></li>
+                        <li><a href="/contact-us.html">Contact Us</a></li>
+                        <li><a href="/seller-support.html">Seller Support</a></li>
+                        <li><a href="/fees-pricing.html">Fees & Pricing</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="/privacy-policy.html">Privacy Policy</a></li>
+                        <li><a href="/terms-of-service.html">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 LibroLink. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script type="module" src="scripts/auth.js"></script>
+    <script type="module" src="scripts/main.js"></script>
+    <script type="module" src="scripts/book-details.js"></script>
+</body>
+</html> 

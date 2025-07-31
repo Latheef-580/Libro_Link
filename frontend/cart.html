@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Cart - LibroLink</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/components.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation (copy from index.html for consistency) -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="/">
+                    <img src="assets/images/naruto-reading.jpg" alt="Naruto Reading" style="width: 60px; height: 60px; object-fit: cover; border-radius: 6px;">
+                    <span class="book-themed">LibroLink</span>
+                </a>
+            </div>
+            <div class="nav-search">
+                <div class="search-container">
+                    <input type="text" id="searchInput" placeholder="Search for books, authors, genres...">
+                    <button class="search-btn" id="searchBtn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="nav-links">
+                <a href="/books" class="nav-link">Browse Books</a>
+                <a href="/wishlist" class="nav-link" id="wishlistLink">
+                    <i class="fas fa-heart"></i>
+                    <span class="wishlist-count">0</span>
+                </a>
+                <a href="/cart" class="nav-link active" id="cartLink">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">0</span>
+                </a>
+                <div class="nav-user" id="navUser">
+                    <a href="/login" class="nav-link">Login</a>
+                    <a href="/register" class="nav-link btn-primary">Sign Up</a>
+                </div>
+                <div class="nav-user-menu" id="navUserMenu" style="display: none;">
+                    <div class="dropdown">
+                        <button class="dropdown-toggle">
+                            <img src="/assets/images/default-avatar.png" alt="Profile" class="user-avatar">
+                            <span id="userDisplayName">User</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="dropdown-menu">
+                            <a href="/profile"><i class="fas fa-user"></i> Profile</a>
+                            <a href="/seller-dashboard"><i class="fas fa-store"></i> Sell Books</a>
+                            <a href="/wishlist"><i class="fas fa-heart"></i> Wishlist</a>
+                            <a href="/cart" class="active"><i class="fas fa-shopping-cart"></i> Cart</a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <!-- Cart Section -->
+    <section class="cart-section">
+        <div class="cart-container">
+            <div class="cart-list-container">
+            <div class="cart-header" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px;">
+                <h1 style="font-size: 2.2rem; color: #667eea; display: flex; align-items: center; gap: 12px;"><i class="fas fa-shopping-cart"></i> My Cart</h1>
+                <button class="btn btn-danger" id="clearCartBtn"><i class="fas fa-trash"></i> Clear Cart</button>
+            </div>
+            <div class="cart-content" id="cartContent">
+                <!-- Cart items will be rendered here -->
+            </div>
+            <div class="cart-summary" id="cartSummary" style="margin-top: 32px;">
+                <!-- Cart summary will be rendered here -->
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Scripts -->
+    <script type="module" src="scripts/main.js"></script>
+    <script type="module" src="scripts/cart.js"></script>
+    <script type="module" src="scripts/auth.js"></script>
+</body>
+</html> 

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - LibroLink</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/components.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="/">
+                    <img src="assets/images/naruto-reading.jpg" alt="Naruto Reading" style="width: 60px; height: 60px; object-fit: cover; border-radius: 6px;">
+                    <span class="book-themed">LibroLink</span>
+                </a>
+            </div>
+            
+            <div class="nav-links">
+                <a href="/books" class="nav-link">Browse Books</a>
+                <a href="/register" class="nav-link">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Login Section -->
+    <section class="auth-section">
+        <div class="container">
+            <div class="auth-container">
+                <div class="auth-form-wrapper animate-slide-in">
+                    <div class="auth-header">
+                        <h1>Welcome Back</h1>
+                        <p>Sign in to your LibroLink account</p>
+                    </div>
+                    
+                    <form class="auth-form" id="loginForm">
+                       <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <div class="input-icon-wrapper">
+                                <input type="email" id="email" name="email" required autocomplete="username">
+                                <i class="fas fa-envelope form-icon"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                placeholder="Enter your password"
+                                required
+                                autocomplete="current-password"
+                            />
+                            <button
+                                type="button"
+                                class="password-toggle"
+                                aria-label="Show password"
+                                tabindex="-1"
+                                onclick="togglePasswordVisibility('password', this)"
+                            >
+                                <!-- SVG Eye Icon (visible by default) 
+                                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/>
+                                    <circle cx="12" cy="12" r="3"/>
+                                </svg>-->
+                            </button>
+                        </div>
+                        
+                        <div class="form-options">
+                            <label class="checkbox-wrapper">
+                                <input type="checkbox" id="rememberMe" name="rememberMe">
+                                <span class="checkmark"></span>
+                                Remember me
+                            </label>
+                            <a href="/forgot-password" class="forgot-link">Forgot password?</a>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary btn-full btn-ripple btn-pulse" id="loginBtn">
+                            <span class="btn-text">Sign In</span>
+                            <span class="btn-loader" style="display: none;">
+                                <i class="fas fa-spinner fa-spin"></i>
+                            </span>
+                        </button>
+                        
+                        <div class="auth-divider">
+                            <span>or</span>
+                        </div>
+                        
+                        <button type="button" class="btn btn-social btn-google">
+                            <i class="fab fa-google"></i>
+                            Continue with Google
+                        </button>
+                        
+                        <div class="auth-footer">
+                            <p>Don't have an account? <a href="/register">Sign up here</a></p>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="auth-image animate-slide-in floating">
+                    <div class="auth-image-content">
+                        <h3>Join our community of book lovers</h3>
+                        <p>Discover thousands of books, connect with readers, and find your next favorite read.</p>
+                        <div class="auth-features">
+                            <div class="feature-item">
+                                <i class="fas fa-check"></i>
+                                <span>Access to thousands of books</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-check"></i>
+                                <span>Secure payment system</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-check"></i>
+                                <span>Personalized recommendations</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Scripts -->
+    <script src="scripts/main.js" type="module"></script>
+    <script src="scripts/auth.js" type="module"></script>
+    <script src="scripts/ripple.js"></script>
+</body>
+</html>

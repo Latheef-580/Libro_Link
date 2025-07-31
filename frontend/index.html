@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LibroLink - Your Book Marketplace</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/components.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="/">
+                    <img src="assets/images/naruto-reading.jpg" alt="Naruto Reading" style="width: 60px; height: 60px; object-fit: cover; border-radius: 6px;">
+                    <span class="book-themed">LibroLink</span>
+                </a>
+            </div>
+            <div class="nav-search">
+                <div class="search-container">
+                    <input type="text" id="searchInput" placeholder="Search for books, authors, genres...">
+                    <button class="search-btn" id="searchBtn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="nav-links">
+                <a href="/books.html" class="nav-link">Browse Books</a>
+                <a href="/wishlist.html" class="nav-link" id="wishlistLink">
+                    <i class="fas fa-heart"></i>
+                    <span class="wishlist-count">0</span>
+                </a>
+                <a href="/cart.html" class="nav-link" id="cartLink">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">0</span>
+                </a>
+                <div class="nav-user" id="navUser">
+                    <a href="/login.html" class="nav-link">Login</a>
+                    <a href="/register.html" class="nav-link btn-primary">Sign Up</a>
+                </div>
+                <div class="nav-user-menu" id="navUserMenu" style="display: none;">
+                    <div class="dropdown">
+                        <button class="dropdown-toggle">
+                            <img src="/assets/images/default-avatar.png" alt="Profile" class="user-avatar">
+                            <span id="userDisplayName">User</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="dropdown-menu">
+                            <a href="/profile.html"><i class="fas fa-user"></i> Profile</a>
+                            <a href="/seller-dashboard.html"><i class="fas fa-store"></i> Sell Books</a>
+                            <a href="/wishlist.html"><i class="fas fa-heart"></i> Wishlist</a>
+                            <a href="/cart.html"><i class="fas fa-shopping-cart"></i> Cart</a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-flex">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1>Discover Your Next Great Read</h1>
+                    <p>Buy and sell books in our trusted marketplace. Find rare editions, textbooks, and bestsellers from readers like you.</p>
+                    <div class="hero-actions">
+                        <a href="/books.html" class="btn btn-primary btn-large">Browse Books</a>
+                        <a href="/seller-dashboard.html" class="btn btn-secondary btn-large">Start Selling</a>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="assets/images/hero-books.png" alt="LibroLink Hero Books" style="max-width:100%;height:auto;display:block;margin:0 auto;" />
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <h2>Why Choose LibroLink?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Trusted Marketplace</h3>
+                    <p>Verified sellers, secure payments, and buyer protection ensure safe transactions.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h3>Easy Discovery</h3>
+                    <p>Advanced search and filtering help you find exactly what you're looking for.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <h3>Great Prices</h3>
+                    <p>Compare prices from multiple sellers and find the best deals on books.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shipping-fast"></i>
+                    </div>
+                    <h3>Fast Shipping</h3>
+                    <p>Quick delivery options get your books to you when you need them.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Books Section -->
+    <section class="featured-books">
+        <div class="container">
+            <div class="section-header">
+                <h2>Featured Books</h2>
+                <a href="/books.html" class="view-all-link">View All <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="books-grid" id="featuredBooksGrid">
+                <!-- Books will be loaded dynamically -->
+                <div class="book-card-loading">
+                    <div class="loading-spinner"></div>
+                    <p>Loading featured books...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section class="categories">
+        <div class="container">
+            <h2>Browse by Category</h2>
+            <div class="categories-grid" id="categoriesGrid">
+                <!-- Categories will be loaded dynamically -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="newsletter">
+        <div class="container">
+            <div class="newsletter-content">
+                <div class="newsletter-text">
+                    <h3>Stay Updated</h3>
+                    <p>Get notified about new arrivals, special offers, and book recommendations.</p>
+                </div>
+                <form class="newsletter-form" id="newsletterForm">
+                    <input type="email" placeholder="Enter your email" required>
+                    <button type="submit" class="btn btn-primary">Subscribe</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>LibroLink</h4>
+                    <p>Your trusted marketplace for buying and selling books.</p>
+                    <div class="social-links">
+                        <a href="https://www.facebook.com/share/16r8fALJ31/"><i class="fab fa-facebook icon icon4 facebook"></i></a>
+                        <a href="https://x.com/shaik_latheef58?t=H_F1eZvkTpY25ZVKJ7EsNA&s=09"><i class="fab fa-twitter icon icon2 twitter"></i></a>
+                        <a href="https://www.instagram.com/abdul_latheef_580?igsh=ZTd4NTFpd3pkZno2"><i class="fab fa-instagram icon icon1 instagram"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h5>For Buyers</h5>
+                    <ul>
+                        <li><a href="/books.html">Browse Books</a></li>
+                        <li><a href="/how-to-buy.html">How to Buy</a></li>
+                        <li><a href="/payment-options.html">Payment Options</a></li>
+                        <li><a href="/shipping-info.html">Shipping Info</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h5>For Sellers</h5>
+                    <ul>
+                        <li><a href="/seller-dashboard.html">Start Selling</a></li>
+                        <li><a href="/seller-guide.html">Seller Guide</a></li>
+                        <li><a href="/fees-pricing.html">Fees & Pricing</a></li>
+                        <li><a href="/seller-support.html">Seller Support</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h5>Support</h5>
+                    <ul>
+                        <li><a href="/help-center.html">Help Center</a></li>
+                        <li><a href="/contact-us.html">Contact Us</a></li>
+                        <li><a href="/privacy-policy.html">Privacy Policy</a></li>
+                        <li><a href="/terms-of-service.html">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 LibroLink. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script type="module" src="scripts/main.js"></script>
+    <script type="module" src="scripts/auth.js"></script>
+    <!-- Cart Sidebar/Modal -->
+    <div class="cart-sidebar" id="cartSidebar" style="display:none;">
+        <div class="cart-sidebar-header">
+            <h3><i class="fas fa-shopping-cart"></i> My Cart</h3>
+            <button class="cart-sidebar-close" id="closeCartSidebar">&times;</button>
+        </div>
+        <div class="cart-sidebar-content" id="cartSidebarContent">
+            <!-- Cart items will be rendered here -->
+        </div>
+        <div class="cart-sidebar-footer">
+            <div class="cart-sidebar-total">
+                Total: <span id="cartSidebarTotal">$0.00</span>
+            </div>
+            <a href="/cart.html" class="btn btn-primary btn-full">Go to Cart</a>
+        </div>
+    </div>
+</body>
+</html>

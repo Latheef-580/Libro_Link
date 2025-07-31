@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help Center - LibroLink</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/components.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    
+    <section class="hero-section hero-alt">
+        <div class="container">
+            <h1>Help Center</h1>
+            <p>Frequently asked questions and support resources for LibroLink users.</p>
+        </div>
+    </section>
+    <section class="content-section">
+        <div class="container">
+            <div class="card faq-card">
+                <div class="faq-item">
+                    <button class="faq-question">How do I track my order?</button>
+                    <div class="faq-answer">You can track your order from your account dashboard or via the tracking link sent to your email after shipping.</div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">How do I contact customer support?</button>
+                    <div class="faq-answer">Use the <a href="contact-us.html">Contact Us</a> page or email us at support@librolink.com.</div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">Can I return a book?</button>
+                    <div class="faq-answer">Returns are accepted within 7 days of delivery for eligible books. See our <a href="/terms-of-service.html">Terms of Service</a> for details.</div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">How do I become a seller?</button>
+                    <div class="faq-answer">Register for a seller account or upgrade your profile from your dashboard.</div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">What payment methods do you accept?</button>
+                    <div class="faq-answer">We accept UPI, credit/debit cards, net banking, and wallets like Paytm and PhonePe.</div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">How do I change my account details?</button>
+                    <div class="faq-answer">You can update your account information from the 'Profile' section in your dashboard.</div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">What are the shipping options?</button>
+                    <div class="faq-answer">We offer standard and express shipping options. Shipping costs vary based on location and order value.</div>
+                </div>
+                <h2>Need More Help?</h2>
+                <p>If you have any other questions or need assistance, please contact our support team at <a href="mailto:support@librolink.com">support@librolink.com</a>.</p>
+            </div>
+        </div>
+    </section>
+    <footer class="footer"><div class="footer-bottom">
+                <p>&copy; 2024 LibroLink. All rights reserved.</p>
+            </div></footer>
+    <script src="scripts/main.js"></script>
+    <script src="scripts/auth.js"></script>
+    <script>
+    // Simple accordion for FAQ
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.faq-question').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const answer = btn.nextElementSibling;
+                answer.style.display = answer.style.display === 'block' ? 'none' : 'block';
+            });
+        });
+    });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seller Dashboard - LibroLink</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/components.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script>
+      if (!localStorage.getItem('currentUser')) {
+        window.location.href = '/login.html';
+      }
+      
+      // Check if user has seller permissions
+      const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+      const accountType = currentUser.accountType || 'buyer';
+      
+      if (accountType !== 'seller' && accountType !== 'both') {
+        alert('You need a seller account to access the seller dashboard. Please contact support to upgrade your account.');
+        window.location.href = '/';
+      }
+    </script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="/">
+                    <img src="assets/images/naruto-reading.jpg" alt="Naruto Reading" style="width: 60px; height: 60px; object-fit: cover; border-radius: 6px;">
+                    <span class="book-themed">LibroLink</span>
+                </a>
+            </div>
+            
+            <div class="nav-search">
+                <div class="search-container">
+                    <input type="text" id="searchInput" placeholder="Search for books, authors, genres...">
+                    <button class="search-btn" id="searchBtn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="nav-links">
+                <a href="/books" class="nav-link">Browse Books</a>
+                <a href="/wishlist" class="nav-link" id="wishlistLink">
+                    <i class="fas fa-heart"></i>
+                    <span class="wishlist-count">0</span>
+                </a>
+                <a href="/cart.html" class="nav-link" id="cartLink">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">0</span>
+                </a>
+                <div class="nav-user-menu" id="navUserMenu">
+                    <div class="dropdown">
+                        <button class="dropdown-toggle">
+                            <img src="/assets/images/default-avatar.png" alt="Profile" class="user-avatar">
+                            <span id="userDisplayName">Seller</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="dropdown-menu">
+                            <a href="/profile"><i class="fas fa-user"></i> Profile</a>
+                            <a href="/seller-dashboard" class="active"><i class="fas fa-store"></i> Sell Books</a>
+                            <a href="/wishlist"><i class="fas fa-heart"></i> Wishlist</a>
+                            <a href="/cart.html"><i class="fas fa-shopping-cart"></i> Cart</a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Dashboard Section -->
+    <section class="dashboard-section">
+        <div class="container">
+            <div class="dashboard-layout">
+                <!-- Sidebar -->
+                <div class="dashboard-sidebar">
+                    <div class="dashboard-menu">
+                        <a href="#overview" class="menu-item active" data-tab="overview">
+                            <i class="fas fa-chart-bar"></i>
+                            Overview
+                        </a>
+                        <a href="#my-books" class="menu-item" data-tab="my-books">
+                            <i class="fas fa-book"></i>
+                            My Books
+                        </a>
+                        <a href="#add-book" class="menu-item" data-tab="add-book">
+                            <i class="fas fa-plus"></i>
+                            Add New Book
+                        </a>
+                        <a href="#orders" class="menu-item" data-tab="orders">
+                            <i class="fas fa-shopping-bag"></i>
+                            Orders
+                        </a>
+                        <a href="#analytics" class="menu-item" data-tab="analytics">
+                            <i class="fas fa-chart-line"></i>
+                            Analytics
+                        </a>
+                        <a href="#settings" class="menu-item" data-tab="settings">
+                            <i class="fas fa-cog"></i>
+                            Settings
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Main Content -->
+                <div class="dashboard-content">
+                    <!-- Overview Tab -->
+                    <div class="tab-content active" id="overview">
+                        <div class="content-header">
+                            <h2>Dashboard Overview</h2>
+                            <p>Welcome back! Here's your selling summary</p>
+                        </div>
+                        
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-icon">
+                                    <i class="fas fa-book"></i>
+                                </div>
+                                <div class="stat-info">
+                                    <h3 id="totalBooks">0</h3>
+                                    <p>Total Books Listed</p>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon">
+                                    <i class="fas fa-shopping-cart"></i>
+                                </div>
+                                <div class="stat-info">
+                                    <h3 id="totalSales">0</h3>
+                                    <p>Books Sold</p>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon">
+                                    <i class="fas fa-dollar-sign"></i>
+                                </div>
+                                <div class="stat-info">
+                                    <h3 id="totalEarnings">₹0.00</h3>
+                                    <p>Total Earnings</p>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon">
+                                    <i class="fas fa-eye"></i>
+                                </div>
+                                <div class="stat-info">
+                                    <h3 id="totalViews">0</h3>
+                                    <p>Profile Views</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="recent-activity">
+                            <h3>Recent Activity</h3>
+                            <div class="activity-list" id="activityList">
+                                <div class="activity-item">
+                                    <div class="activity-icon">
+                                        <i class="fas fa-info-circle"></i>
+                                    </div>
+                                    <div class="activity-content">
+                                        <p>No recent activity</p>
+                                        <small>Start by listing your first book</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- My Books Tab -->
+                    <div class="tab-content" id="my-books">
+                        <div class="content-header">
+                            <h2>My Books</h2>
+                            <p>Manage your book listings</p>
+                            <button class="btn btn-primary" id="addNewBookBtn">
+                                <i class="fas fa-plus"></i> Add New Book
+                            </button>
+                        </div>
+                        
+                        <div class="books-table-container">
+                            <table class="books-table">
+                                <thead>
+                                    <tr>
+                                        <th>Book</th>
+                                        <th>Price</th>
+                                        <th>Condition</th>
+                                        <th>Status</th>
+                                        <th>Views</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="myBooksTable">
+                                    <tr>
+                                        <td colspan="6" class="text-center">
+                                            <div class="empty-state">
+                                                <i class="fas fa-book"></i>
+                                                <h3>No Books Listed</h3>
+                                                <p>Start by adding your first book</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Add New Book Tab -->
+                    <div class="tab-content" id="add-book">
+                        <div class="content-header">
+                            <h2>Add New Book</h2>
+                            <p>List a new book for sale</p>
+                        </div>
+                        <form class="book-form" id="addBookForm">
+                            <div class="form-section">
+                                <h3>Book Information</h3>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="bookTitle">Book Title *</label>
+                                        <input type="text" id="bookTitle" name="title" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="bookAuthor">Author *</label>
+                                        <input type="text" id="bookAuthor" name="author" required>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="bookISBN">ISBN</label>
+                                        <input type="text" id="bookISBN" name="isbn" placeholder="e.g. 978-0-596-51774-8">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="bookCategory">Category *</label>
+                                        <select id="bookCategory" name="category" required>
+                                            <option value="">Select category</option>
+                                            <option value="fiction">Fiction</option>
+                                            <option value="non-fiction">Non-Fiction</option>
+                                            <option value="textbooks">Textbooks</option>
+                                            <option value="mystery">Mystery</option>
+                                            <option value="romance">Romance</option>
+                                            <option value="sci-fi">Science Fiction</option>
+                                            <option value="children">Children's Books</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="bookGenre">Genre</label>
+                                        <input type="text" id="bookGenre" name="genre" placeholder="e.g. Programming, Classic, Fantasy">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="bookLanguage">Language</label>
+                                        <input type="text" id="bookLanguage" name="language" placeholder="e.g. English, Hindi">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="bookDescription">Description *</label>
+                                    <textarea id="bookDescription" name="description" rows="4" placeholder="Describe the book's content and condition..." required></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="bookPreview">Preview Text</label>
+                                    <textarea id="bookPreview" name="preview" rows="2" placeholder="Add a short preview or excerpt..."></textarea>
+                                </div>
+                            </div>
+                            <div class="form-section">
+                                <h3>Pricing & Condition</h3>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="bookPrice">Price (₹) *</label>
+                                        <div class="input-group">
+                                            <span class="input-prefix">₹</span>
+                                            <input type="number" id="bookPrice" name="price" min="0" step="0.01" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="bookOriginalPrice">Original Price (₹)</label>
+                                        <div class="input-group">
+                                            <span class="input-prefix">₹</span>
+                                            <input type="number" id="bookOriginalPrice" name="originalPrice" min="0" step="0.01" placeholder="If discounted">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="bookCondition">Condition *</label>
+                                        <select id="bookCondition" name="condition" required>
+                                            <option value="">Select condition</option>
+                                            <option value="new">New</option>
+                                            <option value="like-new">Like New</option>
+                                            <option value="good">Good</option>
+                                            <option value="fair">Fair</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="bookAvailability">Availability *</label>
+                                        <select id="bookAvailability" name="availability" required>
+                                            <option value="available">Available</option>
+                                            <option value="out-of-stock">Out of Stock</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-section">
+                                <h3>Additional Details</h3>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="bookPageCount">Page Count</label>
+                                        <input type="number" id="bookPageCount" name="pageCount" min="1" placeholder="e.g. 350">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="bookPublisher">Publisher</label>
+                                        <input type="text" id="bookPublisher" name="publisher" placeholder="e.g. Penguin Classics">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="bookPublicationYear">Publication Year</label>
+                                        <input type="number" id="bookPublicationYear" name="publicationYear" min="1000" max="2100" placeholder="e.g. 2020">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="bookLocation">Location</label>
+                                        <input type="text" id="bookLocation" name="location" placeholder="e.g. Mumbai, India">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="bookTags">Tags (comma separated)</label>
+                                    <input type="text" id="bookTags" name="tags" placeholder="e.g. classic, bestseller, award-winning">
+                                </div>
+                                <div class="form-group">
+                                    <label for="bookShippingOptions">Shipping Options (comma separated)</label>
+                                    <input type="text" id="bookShippingOptions" name="shippingOptions" placeholder="e.g. standard, express">
+                                </div>
+                            </div>
+                            <div class="form-section">
+                                <h3>Cover Image</h3>
+                                <div class="form-group">
+                                    <label for="bookCoverImage">Cover Image *</label>
+                                    <input type="file" id="bookCoverImage" name="coverImage" accept="image/*" required>
+                                    <small>Upload a cover image (JPG, PNG, up to 5MB).</small>
+                                </div>
+                            </div>
+                            <div class="form-section">
+                                <h3>Book Images</h3>
+                                <div class="image-upload">
+                                    <input type="file" id="bookImages" name="images" multiple accept="image/*">
+                                    <div class="upload-area" id="uploadArea">
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                        <p>Click to upload or drag and drop</p>
+                                        <small>Upload up to 5 images (JPG, PNG up to 5MB each)</small>
+                                    </div>
+                                    <div class="image-preview" id="imagePreview"></div>
+                                </div>
+                                <div class="form-group" style="margin-top: 20px;">
+                                    <label for="bookSamplePdf">Sample PDF (optional)</label>
+                                    <input type="file" id="bookSamplePdf" name="samplePdf" accept="application/pdf">
+                                    <small>Upload a sample chapter or excerpt as PDF.</small>
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button type="button" class="btn btn-secondary">Save as Draft</button>
+                                <button type="submit" class="btn btn-primary">List Book</button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <!-- Orders Tab -->
+                    <div class="tab-content" id="orders">
+                        <div class="content-header">
+                            <h2>Orders</h2>
+                            <p>Manage your book orders</p>
+                        </div>
+                        
+                        <div class="orders-container" id="ordersContainer">
+                            <div class="empty-state">
+                                <i class="fas fa-shopping-bag"></i>
+                                <h3>No Orders Yet</h3>
+                                <p>Orders will appear here when customers buy your books</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Analytics Tab -->
+                    <div class="tab-content" id="analytics">
+                        <div class="content-header">
+                            <h2>Analytics</h2>
+                            <p>Track your selling performance</p>
+                        </div>
+                        
+                        <div class="analytics-container" id="analyticsContainer">
+                            <div class="analytics-grid">
+                                <div class="analytics-card">
+                                    <h3>Monthly Earnings</h3>
+                                    <div class="chart-placeholder">
+                                        <p>₹0.00</p>
+                                        <small>This month</small>
+                                    </div>
+                                </div>
+                                <div class="analytics-card">
+                                    <h3>Top Performing Books</h3>
+                                    <div class="top-books-list">
+                                        <p>No books listed yet</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Settings Tab -->
+                    <div class="tab-content" id="settings">
+                        <div class="content-header">
+                            <h2>Settings</h2>
+                            <p>Manage your seller account</p>
+                        </div>
+                        
+                        <div class="settings-container">
+                            <div class="settings-section">
+                                <h3>Account Information</h3>
+                                <div class="form-group">
+                                    <label for="storeName">Store Name</label>
+                                    <input type="text" id="storeName" name="storeName" value="My Book Store" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Email</label>
+                                    <input type="email" id="email" name="email" value="seller@example.com" readonly>
+                                </div>
+                            </div>
+                            
+                            <div class="settings-section">
+                                <h3>Notification Preferences</h3>
+                                <div class="checkbox-group">
+                                    <label class="checkbox">
+                                        <input type="checkbox" checked>
+                                        <span>New order notifications</span>
+                                    </label>
+                                    <label class="checkbox">
+                                        <input type="checkbox" checked>
+                                        <span>Payment confirmations</span>
+                                    </label>
+                                    <label class="checkbox">
+                                        <input type="checkbox">
+                                        <span>Marketing emails</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="settings-section">
+                                <h3>Store Description</h3>
+                                <textarea id="storeDescription" name="storeDescription" rows="4" placeholder="Describe your book store..."></textarea>
+                            </div>
+
+                            <div class="settings-section">
+                                <h3>Password Change</h3>
+                                <div class="form-group">
+                                    <label for="currentPassword">Current Password</label>
+                                    <input type="password" id="currentPassword" name="currentPassword" placeholder="Enter current password">
+                                </div>
+                                <div class="form-group">
+                                    <label for="newPassword">New Password</label>
+                                    <input type="password" id="newPassword" name="newPassword" placeholder="Enter new password">
+                                </div>
+                                <div class="form-group">
+                                    <label for="confirmNewPassword">Confirm New Password</label>
+                                    <input type="password" id="confirmNewPassword" name="confirmNewPassword" placeholder="Confirm new password">
+                                </div>
+                            </div>
+
+                            <div class="settings-section">
+                                <h3>Account Deletion</h3>
+                                <p>Once you delete your account, there is no going back. Please be certain.</p>
+                                <button type="button" class="btn btn-danger" id="deleteAccountBtn">Delete Account</button>
+                            </div>
+                        </div>
+                        <div class="settings-feedback" id="settingsFeedback"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Scripts -->
+    <script type="module" src="scripts/main.js"></script>
+    <script type="module" src="scripts/seller-dashboard.js"></script>
+    <script type="module" src="scripts/auth.js"></script>
+</body>
+</html>
