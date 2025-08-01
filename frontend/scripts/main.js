@@ -497,7 +497,7 @@ class LibroLink {
 
     createBookCard(book) {
         // Defensive check for wishlist
-        const isInWishlist = Array.isArray(this.wishlist) && this.wishlist.some(item => item.id === book.id);
+        const isInWishlist = Array.isArray(this.wishlist) && this.wishlist.some(item => String(item.id) === String(book.id || book._id));
         const discountPercent = book.originalPrice ? 
             Math.round((1 - book.price / book.originalPrice) * 100) : 0;
         // Use INR for seller books
@@ -598,7 +598,7 @@ class LibroLink {
             return;
         }
 
-        const book = this.books.find(b => String(b.id) === String(bookId));
+        const book = this.books.find(b => String(b.id || b._id) === String(bookId));
         if (!book) {
             this.showNotification('Book not found', 'error');
             return;
@@ -613,11 +613,11 @@ class LibroLink {
         } else {
             // Add to wishlist
             this.wishlist.push({
-                id: book.id,
+                id: book.id || book._id,
                 title: book.title,
                 author: book.author,
                 price: book.price,
-                image: book.coverImage || '/assets/images/placeholder-book.jpg',
+                image: book.image || book.coverImage || '/assets/images/placeholder-book.jpg',
                 dateAdded: new Date().toISOString()
             });
             if (button) button.classList.add('active');
@@ -638,22 +638,22 @@ class LibroLink {
             return;
         }
 
-        const book = this.books.find(b => b.id === bookId);
-        if (!book || book.status !== 'available') {
+        const book = this.books.find(b => String(b.id || b._id) === String(bookId));
+        if (!book || (book.status !== 'available' && book.availability !== 'available')) {
             this.showNotification('Book is not available', 'error');
             return;
         }
 
-        const existingItem = this.cart.find(item => item.id === bookId);
+        const existingItem = this.cart.find(item => String(item.id) === String(bookId));
         if (existingItem) {
             this.showNotification(`"${book.title}" is already in your cart`, 'info');
         } else {
             this.cart.push({
-                id: book.id,
+                id: book.id || book._id,
                 title: book.title,
                 author: book.author,
                 price: book.price,
-                image: book.coverImage || '/assets/images/placeholder-book.jpg',
+                image: book.image || book.coverImage || '/assets/images/placeholder-book.jpg',
                 quantity: 1,
                 dateAdded: new Date().toISOString()
             });

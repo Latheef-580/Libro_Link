@@ -730,15 +730,50 @@ function showSamplePdfModal(pdfDataUrl) {
     ensureSamplePdfModal();
     const modal = document.getElementById('samplePdfModal');
     const viewer = document.getElementById('samplePdfViewer');
-    viewer.innerHTML = `<embed src="${pdfDataUrl}" type="application/pdf" width="100%" height="100%" style="border-radius:8px;">`;
+    
+    // Add loading indicator
+    viewer.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:1.2rem;color:#888;"><i class="fas fa-spinner fa-spin"></i> Loading PDF...</div>';
     modal.style.display = 'flex';
+    
+    // Create embed element
+    const embed = document.createElement('embed');
+    embed.src = pdfDataUrl;
+    embed.type = 'application/pdf';
+    embed.style.cssText = 'width:100%;height:100%;border-radius:8px;';
+    
+    // Handle load success
+    embed.onload = () => {
+        viewer.innerHTML = '';
+        viewer.appendChild(embed);
+    };
+    
+    // Handle load error
+    embed.onerror = () => {
+        viewer.innerHTML = `
+            <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;font-size:1.2rem;color:#888;text-align:center;">
+                <i class="fas fa-exclamation-triangle" style="font-size:3rem;margin-bottom:1rem;color:#ffc107;"></i>
+                <p>PDF could not be loaded.</p>
+                <p style="font-size:0.9rem;margin-top:0.5rem;">The file may be missing or corrupted.</p>
+                <button onclick="document.getElementById('samplePdfModal').style.display='none'" 
+                        style="margin-top:1rem;padding:8px 16px;background:#007bff;color:white;border:none;border-radius:4px;cursor:pointer;">
+                    Close
+                </button>
+            </div>
+        `;
+    };
+    
+    // Fallback timeout in case embed doesn't trigger events
+    setTimeout(() => {
+        if (viewer.innerHTML.includes('Loading PDF')) {
+            embed.onerror();
+        }
+    }, 5000);
 }
 
-// Patch displayBookDetails to always show the button
+// Patch displayBookDetails to handle preview text
 const origDisplayBookDetails = BookDetailsManager.prototype.displayBookDetails;
 BookDetailsManager.prototype.displayBookDetails = function() {
     origDisplayBookDetails.call(this);
-    // --- Price display logic (already present) ---
     // --- Preview text ---
     const previewSection = document.getElementById('book-preview-text');
     if (previewSection) {
@@ -749,39 +784,6 @@ BookDetailsManager.prototype.displayBookDetails = function() {
         }
         previewSection.style.display = 'block';
     }
-    // --- Read Sample button ---
-    let btn = document.getElementById('readSampleBtn');
-    if (!btn) {
-        btn = document.createElement('button');
-        btn.id = 'readSampleBtn';
-        btn.className = 'btn btn-outline';
-        btn.textContent = 'Read Sample';
-        const addToCartBtn = document.getElementById('add-to-cart');
-        if (addToCartBtn && addToCartBtn.parentNode) {
-            addToCartBtn.parentNode.insertBefore(btn, addToCartBtn.nextSibling);
-        } else {
-            document.body.appendChild(btn);
-        }
-    }
-    btn.onclick = () => {
-        ensureSamplePdfModal();
-        const modal = document.getElementById('samplePdfModal');
-        const viewer = document.getElementById('samplePdfViewer');
-        if (this.book && this.book.samplePdf) {
-            viewer.innerHTML = `<embed id='samplePdfEmbed' src="${this.book.samplePdf}" type="application/pdf" width="100%" height="100%" style="border-radius:8px;">`;
-            // Fallback if PDF fails to load
-            setTimeout(() => {
-                const embed = document.getElementById('samplePdfEmbed');
-                if (embed && (!embed.contentDocument && !embed.getSVGDocument && embed.clientHeight === 0)) {
-                    viewer.innerHTML = `<div style='display:flex;align-items:center;justify-content:center;height:100%;font-size:1.2rem;color:#888;'>Sample PDF could not be loaded. Please check the file path or try again later.</div>`;
-                }
-            }, 2000);
-        } else {
-            viewer.innerHTML = `<div style='display:flex;align-items:center;justify-content:center;height:100%;font-size:1.2rem;color:#888;'>Sample PDF is not available for this book.</div>`;
-        }
-        modal.style.display = 'flex';
-    };
-    btn.style.display = 'inline-block';
 };
 
 // Initialize the book details manager
