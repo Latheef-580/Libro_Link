@@ -215,7 +215,7 @@ class CartManager {
         // Quantity and remove events
         cartContent.querySelectorAll('.cart-quantity-controls button').forEach(btn => {
             btn.addEventListener('click', (e) => {
-                const id = parseInt(btn.getAttribute('data-qty-down')) || parseInt(btn.getAttribute('data-qty-up'));
+                const id = btn.getAttribute('data-qty-down') || btn.getAttribute('data-qty-up');
                 const delta = btn.hasAttribute('data-qty-down') ? -1 : 1;
                 this.updateQuantity(id, delta);
                 this.renderCartPage();
@@ -224,7 +224,7 @@ class CartManager {
         });
         cartContent.querySelectorAll('.cart-quantity-controls input').forEach(input => {
             input.addEventListener('change', () => {
-                const id = parseInt(input.getAttribute('data-qty-input'));
+                const id = input.getAttribute('data-qty-input');
                 const val = Math.max(1, parseInt(input.value) || 1);
                 this.setQuantity(id, val);
                 this.renderCartPage();
@@ -234,7 +234,7 @@ class CartManager {
         cartContent.querySelectorAll('.cart-remove-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                const id = parseInt(btn.getAttribute('data-remove-cart'));
+                const id = btn.getAttribute('data-remove-cart');
                 this.removeFromCart(id);
                 this.renderCartPage();
                 this.renderCartSidebar();

@@ -198,22 +198,22 @@ class WishlistManager {
         document.addEventListener('click', (e) => {
             // Remove from wishlist
             if (e.target.closest('.remove-btn')) {
-                const bookId = parseInt(e.target.closest('.remove-btn').dataset.bookId);
+                const bookId = e.target.closest('.remove-btn').dataset.bookId;
                 this.removeFromWishlist(bookId);
             }
             // View Details button (anime-themed)
             if (e.target.closest('.btn.btn-outline.btn-small') && e.target.closest('.wishlist-item')) {
-                const bookId = parseInt(e.target.closest('.wishlist-item').dataset.bookId);
+                const bookId = e.target.closest('.wishlist-item').dataset.bookId;
                 this.viewBook(bookId);
             }
             // Add to Cart button (anime-themed)
             if (e.target.closest('.btn.btn-primary.btn-full') && e.target.closest('.wishlist-item')) {
-                const bookId = parseInt(e.target.closest('.wishlist-item').dataset.bookId);
+                const bookId = e.target.closest('.wishlist-item').dataset.bookId;
                 this.addToCart(bookId);
             }
             // Notify When Available button
             if (e.target.closest('.btn-secondary') && e.target.closest('.wishlist-item')) {
-                const bookId = parseInt(e.target.closest('.wishlist-item').dataset.bookId);
+                const bookId = e.target.closest('.wishlist-item').dataset.bookId;
                 this.notifyWhenAvailable(bookId);
             }
         });

@@ -1020,66 +1020,43 @@ class BooksManager {
             return;
         }
 
-        // Use the global wishlist manager if available, otherwise use local logic
-        console.log('[Books] window.wishlistManager available:', !!window.wishlistManager);
-        console.log('[Books] window.wishlistManager details:', window.wishlistManager);
+        // Always use local logic for consistency
+        const wishlistKey = this.getUserSpecificKey('wishlist');
+        let wishlist = JSON.parse(localStorage.getItem(wishlistKey) || '[]');
+        const existingIndex = wishlist.findIndex(item => String(item.id) === String(bookId));
         
-        if (window.wishlistManager && window.wishlistManager.currentUser) {
-            const wishlistKey = this.getUserSpecificKey('wishlist');
-            let wishlist = JSON.parse(localStorage.getItem(wishlistKey) || '[]');
-            const existingIndex = wishlist.findIndex(item => String(item.id) === String(bookId));
-            
-            if (existingIndex > -1) {
-                // Remove from wishlist
-                window.wishlistManager.removeFromWishlist(bookId);
-                if (button) button.classList.remove('active');
-                this.showNotification(`"${book.title}" removed from wishlist`, 'info');
-            } else {
-                // Add to wishlist
-                console.log('[Books] Adding to wishlist via wishlistManager:', book);
-                window.wishlistManager.addToWishlist(book);
-                if (button) button.classList.add('active');
-                this.showNotification(`"${book.title}" added to wishlist`, 'success');
-            }
+        if (existingIndex > -1) {
+            // Remove from wishlist
+            wishlist.splice(existingIndex, 1);
+            if (button) button.classList.remove('active');
+            this.showNotification(`"${book.title}" removed from wishlist`, 'info');
         } else {
-            // Fallback to local logic
-            const wishlistKey = this.getUserSpecificKey('wishlist');
-            let wishlist = JSON.parse(localStorage.getItem(wishlistKey) || '[]');
-            const existingIndex = wishlist.findIndex(item => String(item.id) === String(bookId));
-            
-            if (existingIndex > -1) {
-                // Remove from wishlist
-                wishlist.splice(existingIndex, 1);
-                if (button) button.classList.remove('active');
-                this.showNotification(`"${book.title}" removed from wishlist`, 'info');
-            } else {
-                // Add to wishlist
-                const wishlistItem = {
-                    id: book.id || book._id,
-                    title: book.title,
-                    author: book.author,
-                    price: book.price,
-                    image: book.image || book.coverImage,
-                    seller: book.seller || book.sellerName,
-                    category: book.category,
-                    condition: book.condition,
-                    available: book.availability === 'available' || book.status === 'available',
-                    dateAdded: new Date().toISOString()
-                };
-                console.log('[Books] Adding to wishlist via fallback:', wishlistItem);
-                console.log('[Books] Current wishlist before adding:', wishlist);
-                wishlist.push(wishlistItem);
-                console.log('[Books] Wishlist after adding:', wishlist);
-                console.log('[Books] Saving to localStorage with key:', wishlistKey);
-                localStorage.setItem(wishlistKey, JSON.stringify(wishlist));
-                console.log('[Books] localStorage after saving:', localStorage.getItem(wishlistKey));
-                if (button) button.classList.add('active');
-                this.showNotification(`"${book.title}" added to wishlist`, 'success');
-            }
-            localStorage.setItem(wishlistKey, JSON.stringify(wishlist));
+            // Add to wishlist
+            const wishlistItem = {
+                id: book.id || book._id,
+                title: book.title,
+                author: book.author,
+                price: book.price,
+                image: book.image || book.coverImage,
+                seller: book.seller || book.sellerName,
+                category: book.category,
+                condition: book.condition,
+                available: book.availability === 'available' || book.status === 'available',
+                dateAdded: new Date().toISOString()
+            };
+            console.log('[Books] Adding to wishlist:', wishlistItem);
+            wishlist.push(wishlistItem);
+            if (button) button.classList.add('active');
+            this.showNotification(`"${book.title}" added to wishlist`, 'success');
         }
         
+        localStorage.setItem(wishlistKey, JSON.stringify(wishlist));
         this.updateWishlistCounter();
+        
+        // Update wishlist manager if available
+        if (window.wishlistManager) {
+            window.wishlistManager.loadWishlistItems();
+        }
     }
 
     addToCart(bookId) {
