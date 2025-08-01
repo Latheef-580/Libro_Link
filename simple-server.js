@@ -1,5 +1,5 @@
-const express = require('express');
-const cors = require('cors');
+const express = require('./backend/node_modules/express');
+const cors = require('./backend/node_modules/cors');
 const path = require('path');
 
 const app = express();
@@ -79,6 +79,129 @@ app.get('/api/ai/search/autocomplete', (req, res) => {
     } catch (error) {
         console.error('Error loading search suggestions:', error);
         res.status(500).json({ error: 'Failed to load suggestions' });
+    }
+});
+
+// AI status endpoint
+app.get('/api/ai/status', (req, res) => {
+    res.json({
+        success: true,
+        status: 'operational',
+        features: {
+            recommendations: 'available',
+            chatbot: 'available',
+            search: 'available',
+            contentAnalysis: 'available'
+        },
+        message: 'AI features are running with mock responses (no OpenAI API key required)'
+    });
+});
+
+// AI test endpoint
+app.get('/api/ai/test', (req, res) => {
+    try {
+        const sampleData = require('./database/sampleData.json');
+        const testData = {
+            recommendations: sampleData.books.slice(0, 3).map(book => ({
+                ...book,
+                aiScore: 95,
+                reason: "Test recommendation"
+            })),
+            chatbot: "Hello! I'm your LibroLink AI assistant.",
+            search: ['The Great Gatsby', 'Dune', 'Clean Code'],
+            sampleData: sampleData.books.length
+        };
+        
+        res.json({
+            success: true,
+            message: 'AI test endpoint working',
+            data: testData
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            error: 'AI test failed',
+            details: error.message
+        });
+    }
+});
+
+// AI chatbot message endpoint
+app.post('/api/ai/chatbot/message', (req, res) => {
+    try {
+        const { message } = req.body;
+        
+        if (!message) {
+            return res.status(400).json({
+                success: false,
+                error: 'Message is required'
+            });
+        }
+
+        const lowerMessage = message.toLowerCase();
+        let response = {};
+
+        if (lowerMessage.includes('hello') || lowerMessage.includes('hi')) {
+            response = {
+                type: 'text',
+                message: "Hello! I'm your LibroLink AI assistant. How can I help you today?"
+            };
+        } else if (lowerMessage.includes('recommend') || lowerMessage.includes('suggest')) {
+            response = {
+                type: 'recommendation',
+                message: "Here are some great books I'd recommend:",
+                recommendations: require('./database/sampleData.json').books.slice(0, 3)
+            };
+        } else {
+            response = {
+                type: 'text',
+                message: "I'm here to help you discover great books! You can ask me for recommendations, search for specific genres, or get help with your account."
+            };
+        }
+
+        res.json({
+            success: true,
+            response
+        });
+    } catch (error) {
+        console.error('Chatbot error:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Failed to process message'
+        });
+    }
+});
+
+// AI content analysis endpoint
+app.post('/api/ai/content/analyze', (req, res) => {
+    try {
+        const { text, type = 'general' } = req.body;
+
+        if (!text) {
+            return res.status(400).json({
+                success: false,
+                error: 'Text is required'
+            });
+        }
+
+        const analysis = {
+            sentiment: Math.random() > 0.5 ? 'positive' : 'neutral',
+            keywords: ['book', 'reading', 'literature', 'knowledge'],
+            summary: 'This appears to be a book-related text with positive sentiment.',
+            score: Math.floor(Math.random() * 40 + 60),
+            type: type
+        };
+
+        res.json({
+            success: true,
+            analysis
+        });
+    } catch (error) {
+        console.error('Content analysis error:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Failed to analyze content'
+        });
     }
 });
 
