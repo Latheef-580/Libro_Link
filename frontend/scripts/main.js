@@ -517,7 +517,7 @@ class LibroLink {
             priceHtml = formatPriceRange(book.price, book.originalPrice);
         }
         return `
-            <div class="book-card" data-book-id="${book.id}">
+            <div class="book-card" data-book-id="${book.id || book._id}">
                 <div class="book-image">
                     <img src="${book.image || book.coverImage || '/assets/images/placeholder-book.jpg'}" 
                          alt="${book.title}" loading="lazy">
@@ -538,11 +538,11 @@ class LibroLink {
                         <small>Sold by ${book.seller || book.sellerName || ''}</small>
                     </div>
                     <div class="book-actions">
-                        <button class="btn btn-primary btn-add-cart" data-book-id="${book.id}">
+                        <button class="btn btn-primary btn-add-cart" data-book-id="${book.id || book._id}">
                             Add to Cart
                         </button>
                         <button class="btn-wishlist ${isInWishlist ? 'active' : ''}" 
-                                data-book-id="${book.id}" title="Add to Wishlist">
+                                data-book-id="${book.id || book._id}" title="Add to Wishlist">
                             <i class="fas fa-heart"></i>
                         </button>
                     </div>

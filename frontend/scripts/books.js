@@ -922,7 +922,7 @@ class BooksManager {
         document.querySelectorAll('.btn-quick-view').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                const bookId = parseInt(btn.dataset.bookId);
+                const bookId = btn.dataset.bookId;
                 // Navigate to book details page instead of modal
                 window.location.href = `/book-details.html?id=${bookId}`;
             });
@@ -932,7 +932,7 @@ class BooksManager {
         document.querySelectorAll('.btn-wishlist, .wishlist-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                const bookId = parseInt(btn.dataset.bookId);
+                const bookId = btn.dataset.bookId;
                 this.toggleWishlist(bookId, btn);
             });
         });
@@ -941,7 +941,7 @@ class BooksManager {
         document.querySelectorAll('.btn-add-cart, .add-to-cart-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                const bookId = parseInt(btn.dataset.bookId);
+                const bookId = btn.dataset.bookId;
                 console.log('[Books] Add to cart clicked for book ID:', bookId);
                 this.addToCart(bookId);
             });
@@ -951,7 +951,7 @@ class BooksManager {
         document.querySelectorAll('.book-card, .book-list-item').forEach(card => {
             card.addEventListener('click', (e) => {
                 if (!e.target.closest('button')) {
-                    const bookId = parseInt(card.dataset.bookId);
+                    const bookId = card.dataset.bookId;
                     // Navigate to book details page instead of modal
                     window.location.href = `/book-details.html?id=${bookId}`;
                 }

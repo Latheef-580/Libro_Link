@@ -368,6 +368,16 @@ class BookDetailsManager {
             }
         }
 
+        // Show/hide sample PDF button
+        const readSamplePdfBtn = document.getElementById('read-sample-pdf');
+        if (readSamplePdfBtn) {
+            if (this.book.samplePdf) {
+                readSamplePdfBtn.style.display = 'inline-block';
+            } else {
+                readSamplePdfBtn.style.display = 'none';
+            }
+        }
+
         console.log('[BookDetails] Book details displayed successfully');
     }
 
@@ -396,6 +406,12 @@ class BookDetailsManager {
         const addToCartBtn = document.getElementById('add-to-cart');
         if (addToCartBtn) {
             addToCartBtn.addEventListener('click', () => this.addToCart());
+        }
+
+        // Read sample PDF button
+        const readSamplePdfBtn = document.getElementById('read-sample-pdf');
+        if (readSamplePdfBtn) {
+            readSamplePdfBtn.addEventListener('click', () => this.showSamplePdf());
         }
 
         // Review form
@@ -595,6 +611,58 @@ class BookDetailsManager {
     updateUI() {
         this.updateWishlistButton();
         this.updateCartCount();
+    }
+
+    showSamplePdf() {
+        if (this.book && this.book.samplePdf) {
+            showSamplePdfModal(this.book.samplePdf);
+        } else {
+            this.showNotification('Sample PDF is not available for this book.', 'info');
+        }
+    }
+
+    showNotification(message, type = 'info') {
+        // Create notification element
+        const notification = document.createElement('div');
+        notification.className = `notification notification-${type}`;
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            border-radius: 6px;
+            color: white;
+            font-weight: 500;
+            z-index: 10000;
+            max-width: 300px;
+            word-wrap: break-word;
+        `;
+        
+        // Set background color based on type
+        switch (type) {
+            case 'success':
+                notification.style.backgroundColor = '#28a745';
+                break;
+            case 'error':
+                notification.style.backgroundColor = '#dc3545';
+                break;
+            case 'warning':
+                notification.style.backgroundColor = '#ffc107';
+                notification.style.color = '#212529';
+                break;
+            default:
+                notification.style.backgroundColor = '#17a2b8';
+        }
+        
+        notification.textContent = message;
+        document.body.appendChild(notification);
+        
+        // Remove notification after 3 seconds
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 3000);
     }
 
     // Helper methods
