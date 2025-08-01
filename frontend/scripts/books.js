@@ -202,6 +202,16 @@ class BooksManager {
         // Debug: Log all books and their prices
         console.log('[Books] All loaded books:', this.books.length);
         console.log('[Books] Books data:', this.books);
+        
+        // Debug: Log image paths for seller books
+        const sellerBooks = this.books.filter(b => b.sellerId);
+        sellerBooks.forEach(book => {
+            console.log(`[Books] Seller book "${book.title}" image:`, {
+                image: book.image,
+                coverImage: book.coverImage,
+                finalPath: book.image || book.coverImage || '/assets/images/placeholder-book.jpg'
+            });
+        });
         this.books.forEach(book => {
             if (Number(book.price) === 1999) {
                 console.log('[Books] Found book with price 1999:', book.title, 'Price:', book.price, 'Type:', typeof book.price);
@@ -776,7 +786,8 @@ class BooksManager {
             <div class="book-card" data-book-id="${book.id || book._id}">
                 <div class="book-image">
                     <img src="${book.image || book.coverImage || '/assets/images/placeholder-book.jpg'}" 
-                         alt="${book.title}" loading="lazy">
+                         alt="${book.title}" loading="lazy"
+                         onerror="this.src='/assets/images/placeholder-book.jpg'; console.error('Failed to load image:', this.src);">
                     ${discountPercent > 0 ? `<div class="discount-badge">-${discountPercent}%</div>` : ''}
                     <div class="book-overlay">
                     </div>
@@ -829,7 +840,8 @@ class BooksManager {
         return `
             <div class="book-list-item" data-book-id="${book.id || book._id}">
                 <div class="book-image">
-                    <img src="${book.image || book.coverImage || '/assets/images/placeholder-book.jpg'}" alt="${book.title}" loading="lazy">
+                    <img src="${book.image || book.coverImage || '/assets/images/placeholder-book.jpg'}" alt="${book.title}" loading="lazy"
+                         onerror="this.src='/assets/images/placeholder-book.jpg'; console.error('Failed to load image:', this.src);">
                     ${book.availability === 'out-of-stock' ? '<div class="stock-badge">Out of Stock</div>' : ''}
                 </div>
                 <div class="book-details">

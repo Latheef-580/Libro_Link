@@ -416,6 +416,7 @@ class SellerDashboard {
             views: 0,
             dateAdded: new Date().toISOString(),
             image: coverImagePath || (prevBook ? prevBook.image : '/assets/images/placeholder-book.jpg'),
+            coverImage: coverImagePath || (prevBook ? prevBook.image : '/assets/images/placeholder-book.jpg'),
             samplePdf: samplePdfPath || (prevBook ? prevBook.samplePdf : undefined)
         };
         try {

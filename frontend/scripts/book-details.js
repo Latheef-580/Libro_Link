@@ -257,8 +257,16 @@ class BookDetailsManager {
         // Update book image
         const bookCover = document.getElementById('book-cover');
         if (bookCover) {
-            bookCover.src = this.book.image || '/assets/images/placeholder-book.png';
+            const imagePath = this.book.image || this.book.coverImage || '/assets/images/placeholder-book.jpg';
+            console.log('[BookDetails] Setting book cover image:', imagePath);
+            bookCover.src = imagePath;
             bookCover.alt = this.book.title;
+            
+            // Add error handling for image loading
+            bookCover.onerror = () => {
+                console.error('[BookDetails] Failed to load image:', imagePath);
+                bookCover.src = '/assets/images/placeholder-book.jpg';
+            };
         }
 
         // Update book title
@@ -735,39 +743,55 @@ function showSamplePdfModal(pdfDataUrl) {
     viewer.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:1.2rem;color:#888;"><i class="fas fa-spinner fa-spin"></i> Loading PDF...</div>';
     modal.style.display = 'flex';
     
-    // Create embed element
-    const embed = document.createElement('embed');
-    embed.src = pdfDataUrl;
-    embed.type = 'application/pdf';
-    embed.style.cssText = 'width:100%;height:100%;border-radius:8px;';
+    console.log('[PDF Viewer] Attempting to load PDF from:', pdfDataUrl);
     
-    // Handle load success
-    embed.onload = () => {
-        viewer.innerHTML = '';
-        viewer.appendChild(embed);
-    };
-    
-    // Handle load error
-    embed.onerror = () => {
-        viewer.innerHTML = `
-            <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;font-size:1.2rem;color:#888;text-align:center;">
-                <i class="fas fa-exclamation-triangle" style="font-size:3rem;margin-bottom:1rem;color:#ffc107;"></i>
-                <p>PDF could not be loaded.</p>
-                <p style="font-size:0.9rem;margin-top:0.5rem;">The file may be missing or corrupted.</p>
-                <button onclick="document.getElementById('samplePdfModal').style.display='none'" 
-                        style="margin-top:1rem;padding:8px 16px;background:#007bff;color:white;border:none;border-radius:4px;cursor:pointer;">
-                    Close
-                </button>
-            </div>
-        `;
-    };
-    
-    // Fallback timeout in case embed doesn't trigger events
-    setTimeout(() => {
-        if (viewer.innerHTML.includes('Loading PDF')) {
-            embed.onerror();
-        }
-    }, 5000);
+    // First, try to fetch the PDF to check if it exists
+    fetch(pdfDataUrl)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            return response.blob();
+        })
+        .then(blob => {
+            // Create object URL from blob
+            const objectUrl = URL.createObjectURL(blob);
+            
+            // Create iframe for better PDF viewing
+            const iframe = document.createElement('iframe');
+            iframe.src = objectUrl;
+            iframe.style.cssText = 'width:100%;height:100%;border-radius:8px;border:none;';
+            
+            // Clear loading and add iframe
+            viewer.innerHTML = '';
+            viewer.appendChild(iframe);
+            
+            // Clean up object URL when modal is closed
+            const closeBtn = document.getElementById('closeSamplePdfModal');
+            if (closeBtn) {
+                const originalOnClick = closeBtn.onclick;
+                closeBtn.onclick = () => {
+                    URL.revokeObjectURL(objectUrl);
+                    if (originalOnClick) originalOnClick();
+                    modal.style.display = 'none';
+                };
+            }
+        })
+        .catch(error => {
+            console.error('[PDF Viewer] Error loading PDF:', error);
+            viewer.innerHTML = `
+                <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;font-size:1.2rem;color:#888;text-align:center;">
+                    <i class="fas fa-exclamation-triangle" style="font-size:3rem;margin-bottom:1rem;color:#ffc107;"></i>
+                    <p>PDF could not be loaded.</p>
+                    <p style="font-size:0.9rem;margin-top:0.5rem;">Error: ${error.message}</p>
+                    <p style="font-size:0.9rem;margin-top:0.5rem;">The file may be missing or corrupted.</p>
+                    <button onclick="document.getElementById('samplePdfModal').style.display='none'" 
+                            style="margin-top:1rem;padding:8px 16px;background:#007bff;color:white;border:none;border-radius:4px;cursor:pointer;">
+                        Close
+                    </button>
+                </div>
+            `;
+        });
 }
 
 // Patch displayBookDetails to handle preview text
