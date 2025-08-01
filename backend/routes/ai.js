@@ -1,11 +1,5 @@
 // backend/routes/ai.js
 const express = require('express');
-const { authMiddleware } = require('../middleware/auth');
-const aiRecommendations = require('../utils/aiRecommendations');
-const aiChatbot = require('../utils/aiChatbot');
-const aiSearch = require('../utils/aiSearch');
-const Book = require('../models/Book');
-const User = require('../models/User');
 const sampleData = require('../../database/sampleData.json');
 
 const router = express.Router();
@@ -267,6 +261,34 @@ router.get('/status', async (req, res) => {
         },
         message: 'AI features are running with mock responses (no OpenAI API key required)'
     });
+});
+
+// Test endpoint for AI features
+router.get('/test', async (req, res) => {
+    try {
+        const testData = {
+            recommendations: sampleData.books.slice(0, 3).map(book => ({
+                ...book,
+                aiScore: 95,
+                reason: "Test recommendation"
+            })),
+            chatbot: mockAIResponses.chatbot.greeting,
+            search: ['The Great Gatsby', 'Dune', 'Clean Code'],
+            sampleData: sampleData.books.length
+        };
+        
+        res.json({
+            success: true,
+            message: 'AI test endpoint working',
+            data: testData
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            error: 'AI test failed',
+            details: error.message
+        });
+    }
 });
 
 module.exports = router; 

@@ -86,7 +86,7 @@ class AIFeatures {
             const response = await fetch(`/api/ai/search/autocomplete?query=${encodeURIComponent(query)}&limit=8`);
             const data = await response.json();
 
-            if (data.success && data.suggestions.length > 0) {
+            if (data.success && data.suggestions && data.suggestions.length > 0) {
                 this.displaySuggestions(data.suggestions, query);
                 this.showSuggestions();
             } else {
@@ -179,9 +179,22 @@ class AIFeatures {
     }
 
     async loadRecommendations() {
-        // For now, always show popular books to avoid authentication issues
-        // TODO: Implement proper AI recommendations when user is logged in
-        await this.loadPopularBooks();
+        try {
+            // Try to get AI recommendations first
+            const response = await fetch('/api/ai/recommendations?type=hybrid&limit=6');
+            const data = await response.json();
+
+            if (data.success && data.recommendations && data.recommendations.length > 0) {
+                this.displayRecommendations(data.recommendations, true);
+                this.showRecommendationsSection();
+            } else {
+                // Fallback to popular books
+                await this.loadPopularBooks();
+            }
+        } catch (error) {
+            console.error('Error loading AI recommendations, trying popular books:', error);
+            await this.loadPopularBooks();
+        }
     }
 
     async loadPopularBooks() {
