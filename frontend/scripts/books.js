@@ -158,14 +158,19 @@ class BooksManager {
     }
 
     async loadBooks() {
+        console.log('[Books] Starting loadBooks...');
         // Fetch books from API
         let sampleDataBooks = [];
         try {
+            console.log('[Books] Fetching from /api/books...');
             const response = await fetch('/api/books');
+            console.log('[Books] Response status:', response.status);
             const data = await response.json();
+            console.log('[Books] Response data:', data);
             sampleDataBooks = Array.isArray(data.books) ? data.books : [];
+            console.log('[Books] Parsed books from main API:', sampleDataBooks.length);
         } catch (e) {
-            console.log('[Books] Main API failed, trying sample data route...');
+            console.log('[Books] Main API failed, trying sample data route...', e);
             try {
                 const sampleResponse = await fetch('/api/books/sample');
                 const sampleData = await sampleResponse.json();
@@ -196,12 +201,14 @@ class BooksManager {
         
         // Debug: Log all books and their prices
         console.log('[Books] All loaded books:', this.books.length);
+        console.log('[Books] Books data:', this.books);
         this.books.forEach(book => {
             if (Number(book.price) === 1999) {
                 console.log('[Books] Found book with price 1999:', book.title, 'Price:', book.price, 'Type:', typeof book.price);
             }
         });
         
+        console.log('[Books] About to render books...');
         this.renderBooks();
         this.updateResultsCount();
         this.renderPagination();
