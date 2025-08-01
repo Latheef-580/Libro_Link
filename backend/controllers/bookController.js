@@ -1,11 +1,20 @@
 const Book = require('../models/Book');
 const User = require('../models/User');
 const Wishlist = require('../models/Wishlist');
+const sampleData = require('../../database/sampleData.json');
 
 // Get all books with optional filtering and pagination
 const getAllBooks = async (req, res, next) => {
   try {
     const { genre, author, search, page = 1, limit = 20, sortBy = 'title', sortOrder = 'asc' } = req.query;
+    
+    // Check if database is empty and seed with sample data
+    const totalBooksInDB = await Book.countDocuments();
+    if (totalBooksInDB === 0) {
+      console.log('Database is empty, seeding with sample data...');
+      await seedSampleData();
+    }
+    
     const query = {};
     if (genre) query.genre = genre;
     if (author) query.author = author;
@@ -137,6 +146,99 @@ const getSellerBooks = async (req, res) => {
   res.json({ message: 'Seller books endpoint not yet implemented.' });
 };
 
+// Seed sample data function
+const seedSampleData = async () => {
+  try {
+    console.log('Seeding sample data...');
+    
+    // Create a default seller user if it doesn't exist
+    let defaultSeller = await User.findOne({ email: 'default-seller@librolink.com' });
+    if (!defaultSeller) {
+      defaultSeller = new User({
+        firstName: 'Default',
+        lastName: 'Seller',
+        email: 'default-seller@librolink.com',
+        password: 'defaultpassword123',
+        username: 'defaultseller',
+        accountType: 'seller',
+        isActive: true,
+        phone: '+1-555-000-0000',
+        bio: 'Default seller for sample books'
+      });
+      await defaultSeller.save();
+      console.log('Created default seller');
+    }
+
+    // Create sample books
+    const books = [];
+    for (let i = 0; i < sampleData.books.length; i++) {
+      const bookData = sampleData.books[i];
+      
+      // Check if book already exists
+      const existingBook = await Book.findOne({ title: bookData.title, author: bookData.author });
+      if (existingBook) {
+        console.log(`Book ${bookData.title} already exists, skipping...`);
+        continue;
+      }
+      
+      // Fix category mapping
+      let category = bookData.category.toLowerCase();
+      if (category === "children's books") {
+        category = "children";
+      }
+      
+      // Fix condition mapping
+      let condition = bookData.condition.toLowerCase().replace(' ', '-');
+      if (condition === 'fair') {
+        condition = 'acceptable';
+      } else if (condition === 'excellent') {
+        condition = 'like-new';
+      }
+      
+      const book = new Book({
+        title: bookData.title,
+        author: bookData.author,
+        isbn: bookData.isbn,
+        description: bookData.description,
+        category: category,
+        genre: bookData.genre,
+        condition: condition,
+        price: bookData.price,
+        originalPrice: bookData.originalPrice,
+        seller: defaultSeller._id,
+        sellerName: defaultSeller.firstName + ' ' + defaultSeller.lastName,
+        coverImage: bookData.coverImage,
+        status: bookData.status,
+        views: bookData.views,
+        likes: Math.floor(Math.random() * 50),
+        language: bookData.language,
+        publisher: bookData.publisher,
+        publishedYear: bookData.publicationYear,
+        pages: bookData.pageCount,
+        tags: bookData.tags,
+        location: {
+          city: bookData.location.split(',')[0],
+          state: bookData.location.split(',')[1]?.trim() || 'Unknown',
+          country: 'USA'
+        },
+        shipping: {
+          free: Math.random() > 0.5,
+          cost: Math.random() > 0.5 ? 0 : Math.floor(Math.random() * 500),
+          methods: bookData.shippingOptions
+        },
+        averageRating: bookData.averageRating,
+        reviewCount: Math.floor(Math.random() * 20)
+      });
+      books.push(await book.save());
+    }
+    console.log(`Created ${books.length} sample books`);
+    return books;
+  } catch (error) {
+    console.error('Error seeding sample data:', error);
+    throw error;
+  }
+};
+
 module.exports = {
   getAllBooks,
   getBookById,
@@ -148,5 +250,6 @@ module.exports = {
   searchBooks,
   getFeaturedBooks,
   getBooksByCategory,
-  getSellerBooks
+  getSellerBooks,
+  seedSampleData
 };

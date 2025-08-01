@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "build": "echo 'No build step required for Node.js'"
+    "build": "echo 'No build step required for Node.js'",
+    "seed": "node seed-on-deploy.js",
+    "seed-db": "node seedDatabase.js"
   },
   "keywords": ["ai", "books", "marketplace", "nodejs", "express"],
   "author": "Your Name",

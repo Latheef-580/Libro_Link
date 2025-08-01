@@ -18,6 +18,18 @@ router.get('/sample', (req, res) => {
     }
 });
 
+// Route to seed database with sample data
+router.post('/seed', async (req, res) => {
+    try {
+        const { seedSampleData } = require('../controllers/bookController');
+        await seedSampleData();
+        res.json({ message: 'Database seeded successfully with sample data' });
+    } catch (error) {
+        console.error('Error seeding database:', error);
+        res.status(500).json({ error: 'Failed to seed database' });
+    }
+});
+
 // Get all books with filtering and pagination
 router.get('/', [
     query('page').optional().isInt({ min: 1 }).withMessage('Page must be a positive integer'),

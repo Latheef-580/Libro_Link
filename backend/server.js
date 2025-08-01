@@ -73,6 +73,11 @@ app.use('/api/upload', require('./routes/upload'));
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.join(__dirname, '../frontend')));
     
+    // Admin seed route for production
+    app.get('/admin-seed', (req, res) => {
+        res.sendFile(path.join(__dirname, '../frontend/admin-seed.html'));
+    });
+    
     // Handle React routing, return all requests to React app
     app.get('*', (req, res) => {
         res.sendFile(path.join(__dirname, '../frontend', 'index.html'));
@@ -113,6 +118,10 @@ if (process.env.NODE_ENV === 'production') {
     app.get('/book-details/:id', (req, res) => {
         res.sendFile(path.join(__dirname, '../frontend/book-details.html'));
     });
+    
+    app.get('/admin-seed', (req, res) => {
+        res.sendFile(path.join(__dirname, '../frontend/admin-seed.html'));
+    });
 }
 
 // Error handling middleware
@@ -136,6 +145,25 @@ app.use((req, res) => {
 // Start server
 const startServer = async () => {
     await connectDB();
+    
+    // Auto-seed database if empty (only in production)
+    if (process.env.NODE_ENV === 'production') {
+        try {
+            const Book = require('./models/Book');
+            const bookCount = await Book.countDocuments();
+            if (bookCount === 0) {
+                console.log('Database is empty, auto-seeding with sample data...');
+                const { seedSampleData } = require('./controllers/bookController');
+                await seedSampleData();
+                console.log('Auto-seeding completed successfully');
+            } else {
+                console.log(`Database already has ${bookCount} books`);
+            }
+        } catch (error) {
+            console.error('Error during auto-seeding:', error);
+        }
+    }
+    
     app.listen(PORT, () => {
         console.log(`Server running on port ${PORT}`);
         console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
