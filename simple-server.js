@@ -23,7 +23,7 @@ app.get('/test', (req, res) => {
 app.get('/api/books/sample', (req, res) => {
     try {
         const sampleData = require('./database/sampleData.json');
-        res.json(sampleData);
+        res.json({ books: sampleData.books });
     } catch (error) {
         console.error('Error loading sample data:', error);
         res.status(500).json({ error: 'Failed to load sample data' });
@@ -34,7 +34,7 @@ app.get('/api/books/sample', (req, res) => {
 app.get('/api/books', (req, res) => {
     try {
         const sampleData = require('./database/sampleData.json');
-        res.json(sampleData);
+        res.json({ books: sampleData.books });
     } catch (error) {
         console.error('Error loading books:', error);
         res.status(500).json({ error: 'Failed to load books' });
