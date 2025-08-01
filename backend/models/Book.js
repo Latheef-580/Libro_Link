@@ -96,6 +96,54 @@ const bookSchema = new mongoose.Schema({
         default: 0
     },
     tags: [String],
+    
+    // AI and Recommendation fields
+    aiFeatures: {
+        // Content analysis
+        contentVector: [Number], // Embedding vector for semantic search
+        keywords: [String], // Extracted keywords for search
+        sentiment: {
+            type: String,
+            enum: ['positive', 'neutral', 'negative'],
+            default: 'neutral'
+        },
+        complexity: {
+            type: String,
+            enum: ['beginner', 'intermediate', 'advanced'],
+            default: 'intermediate'
+        },
+        
+        // Recommendation metrics
+        popularityScore: { type: Number, default: 0 },
+        recommendationCount: { type: Number, default: 0 },
+        clickThroughRate: { type: Number, default: 0 },
+        
+        // Similar books (pre-computed)
+        similarBooks: [{
+            bookId: { type: mongoose.Schema.Types.ObjectId, ref: 'Book' },
+            similarityScore: Number
+        }],
+        
+        // AI-generated content
+        aiDescription: String,
+        aiTags: [String],
+        aiCategory: String
+    },
+    
+    // Analytics for AI
+    analytics: {
+        viewCount: { type: Number, default: 0 },
+        purchaseCount: { type: Number, default: 0 },
+        wishlistCount: { type: Number, default: 0 },
+        averageRating: { type: Number, default: 0 },
+        ratingCount: { type: Number, default: 0 },
+        conversionRate: { type: Number, default: 0 },
+        timeToSell: Number, // days
+        priceHistory: [{
+            price: Number,
+            date: { type: Date, default: Date.now }
+        }]
+    },
     dimensions: {
         length: Number,
         width: Number,

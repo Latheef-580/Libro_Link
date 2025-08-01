@@ -25,6 +25,16 @@
                     <button class="search-btn" id="searchBtn">
                         <i class="fas fa-search"></i>
                     </button>
+                    <!-- AI Search Auto-complete -->
+                    <div class="ai-search-suggestions" id="aiSearchSuggestions" style="display: none;">
+                        <div class="suggestions-header">
+                            <i class="fas fa-robot"></i>
+                            <span>AI Suggestions</span>
+                        </div>
+                        <div class="suggestions-list" id="suggestionsList">
+                            <!-- Suggestions will be populated here -->
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="nav-links">
@@ -102,7 +112,7 @@
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">
-                        <i class="fas fa-dollar-sign"></i>
+                        <i class="fas fa-rupee-sign"></i>
                     </div>
                     <h3>Great Prices</h3>
                     <p>Compare prices from multiple sellers and find the best deals on books.</p>
@@ -211,6 +221,8 @@
     <!-- Scripts -->
     <script type="module" src="scripts/main.js"></script>
     <script type="module" src="scripts/auth.js"></script>
+    <script src="scripts/ai-chatbot.js"></script>
+    <script src="scripts/ai-features.js"></script>
     <!-- Cart Sidebar/Modal -->
     <div class="cart-sidebar" id="cartSidebar" style="display:none;">
         <div class="cart-sidebar-header">
@@ -222,7 +234,7 @@
         </div>
         <div class="cart-sidebar-footer">
             <div class="cart-sidebar-total">
-                Total: <span id="cartSidebarTotal">$0.00</span>
+                Total: <span id="cartSidebarTotal">₹0.00</span>
             </div>
             <a href="/cart.html" class="btn btn-primary btn-full">Go to Cart</a>
         </div>

@@ -135,4 +135,4 @@ LibroLink/
 - Inspired by modern book marketplaces
 
 ## 📄 License
-MIT License 
+MIT License

@@ -115,6 +115,10 @@
                             <i class="fas fa-bell"></i>
                             Notifications
                         </a>
+                        <a href="#ai-analytics" class="menu-item" data-tab="ai-analytics">
+                            <i class="fas fa-robot"></i>
+                            AI Analytics
+                        </a>
                     </div>
                 </div>
                 
@@ -424,6 +428,93 @@
                             </div>
                         </form>
                     </div>
+                    
+                    <!-- AI Analytics Tab -->
+                    <div class="tab-content" id="ai-analytics">
+                        <div class="content-header">
+                            <h2>
+                                <i class="fas fa-robot"></i>
+                                AI Analytics Dashboard
+                            </h2>
+                            <p>Your personalized insights and reading behavior analysis</p>
+                            <button class="btn btn-outline" id="refreshAnalyticsBtn">
+                                <i class="fas fa-sync-alt"></i> Refresh Data
+                            </button>
+                        </div>
+                        
+                        <div class="analytics-grid">
+                            <!-- Engagement Score -->
+                            <div class="analytics-card">
+                                <div class="analytics-header">
+                                    <h3>Engagement Score</h3>
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                                <div class="analytics-value" id="engagementScore">--</div>
+                                <div class="analytics-description">How active you are on the platform</div>
+                            </div>
+                            
+                            <!-- Churn Risk -->
+                            <div class="analytics-card">
+                                <div class="analytics-header">
+                                    <h3>Churn Risk</h3>
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                </div>
+                                <div class="analytics-value" id="churnRisk">--</div>
+                                <div class="analytics-description">Risk of becoming inactive</div>
+                            </div>
+                            
+                            <!-- Lifetime Value -->
+                            <div class="analytics-card">
+                                <div class="analytics-header">
+                                    <h3>Lifetime Value</h3>
+                                    <i class="fas fa-coins"></i>
+                                </div>
+                                <div class="analytics-value" id="lifetimeValue">--</div>
+                                <div class="analytics-description">Total value of your activity</div>
+                            </div>
+                            
+                            <!-- Session Count -->
+                            <div class="analytics-card">
+                                <div class="analytics-header">
+                                    <h3>Session Count</h3>
+                                    <i class="fas fa-calendar-check"></i>
+                                </div>
+                                <div class="analytics-value" id="sessionCount">--</div>
+                                <div class="analytics-description">Total sessions this month</div>
+                            </div>
+                        </div>
+                        
+                        <div class="analytics-details">
+                            <div class="analytics-section">
+                                <h3>Reading Behavior</h3>
+                                <div class="behavior-stats">
+                                    <div class="behavior-item">
+                                        <span class="behavior-label">Books Viewed</span>
+                                        <span class="behavior-value" id="booksViewed">--</span>
+                                    </div>
+                                    <div class="behavior-item">
+                                        <span class="behavior-label">Books Purchased</span>
+                                        <span class="behavior-value" id="booksPurchased">--</span>
+                                    </div>
+                                    <div class="behavior-item">
+                                        <span class="behavior-label">Wishlist Items</span>
+                                        <span class="behavior-value" id="wishlistItems">--</span>
+                                    </div>
+                                    <div class="behavior-item">
+                                        <span class="behavior-label">Reviews Given</span>
+                                        <span class="behavior-value" id="reviewsGiven">--</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="analytics-section">
+                                <h3>AI Recommendations</h3>
+                                <div class="recommendations-preview" id="recommendationsPreview">
+                                    <p>Loading your personalized recommendations...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -461,5 +552,7 @@
     <script type="module" src="scripts/main.js"></script>
     <script src="scripts/auth.js"></script>
     <script src="scripts/profile.js"></script>
+    <script src="scripts/ai-chatbot.js"></script>
+    <script src="scripts/ai-analytics.js"></script>
 </body>
 </html>

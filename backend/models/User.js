@@ -78,6 +78,64 @@ const userSchema = new mongoose.Schema({
     totalEarned: { type: Number, default: 0 },
     memberSince: { type: Date, default: Date.now }
   },
+  
+  // AI and Recommendation fields
+  aiProfile: {
+    readingPreferences: [{
+      category: String,
+      weight: { type: Number, default: 1.0 }
+    }],
+    favoriteAuthors: [String],
+    favoriteGenres: [String],
+    priceRange: {
+      min: { type: Number, default: 0 },
+      max: { type: Number, default: 10000 }
+    },
+    readingLevel: {
+      type: String,
+      enum: ['beginner', 'intermediate', 'advanced'],
+      default: 'intermediate'
+    }
+  },
+  
+  // User behavior tracking for AI
+  behavior: {
+    searchHistory: [{
+      query: String,
+      timestamp: { type: Date, default: Date.now },
+      results: [String] // Book IDs
+    }],
+    viewHistory: [{
+      bookId: { type: mongoose.Schema.Types.ObjectId, ref: 'Book' },
+      timestamp: { type: Date, default: Date.now },
+      duration: Number // seconds spent viewing
+    }],
+    purchaseHistory: [{
+      bookId: { type: mongoose.Schema.Types.ObjectId, ref: 'Book' },
+      timestamp: { type: Date, default: Date.now },
+      price: Number
+    }],
+    wishlistItems: [{
+      bookId: { type: mongoose.Schema.Types.ObjectId, ref: 'Book' },
+      addedAt: { type: Date, default: Date.now }
+    }],
+    ratings: [{
+      bookId: { type: mongoose.Schema.Types.ObjectId, ref: 'Book' },
+      rating: { type: Number, min: 1, max: 5 },
+      review: String,
+      timestamp: { type: Date, default: Date.now }
+    }]
+  },
+  
+  // AI Analytics
+  analytics: {
+    churnRisk: { type: Number, default: 0.5 }, // 0-1 scale
+    lifetimeValue: { type: Number, default: 0 },
+    engagementScore: { type: Number, default: 0 },
+    lastActivity: { type: Date, default: Date.now },
+    sessionCount: { type: Number, default: 0 },
+    averageSessionDuration: { type: Number, default: 0 }
+  },
   addresses: [{
     type: {
       type: String,

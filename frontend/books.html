@@ -30,6 +30,16 @@
                     <button class="search-btn" id="searchBtn">
                         <i class="fas fa-search"></i>
                     </button>
+                    <!-- AI Search Auto-complete -->
+                    <div class="ai-search-suggestions" id="aiSearchSuggestions" style="display: none;">
+                        <div class="suggestions-header">
+                            <i class="fas fa-robot"></i>
+                            <span>AI Suggestions</span>
+                        </div>
+                        <div class="suggestions-list" id="suggestionsList">
+                            <!-- Suggestions will be populated here -->
+                        </div>
+                    </div>
                 </div>
             </div>
             
@@ -202,6 +212,22 @@
                         </div>
                     </div>
                     
+                    <!-- AI Recommendations Section -->
+                    <div class="ai-recommendations-section" id="aiRecommendationsSection" style="display: none;">
+                        <div class="recommendations-header">
+                            <h3>
+                                <i class="fas fa-robot"></i>
+                                AI Recommendations for You
+                            </h3>
+                            <button class="btn btn-sm btn-outline" id="refreshRecommendations">
+                                <i class="fas fa-sync-alt"></i> Refresh
+                            </button>
+                        </div>
+                        <div class="recommendations-grid" id="recommendationsGrid">
+                            <!-- AI recommendations will be loaded here -->
+                        </div>
+                    </div>
+                    
                     <div class="books-grid" id="booksGrid">
                         <!-- Books will be loaded dynamically -->
                         <div class="loading-state">
@@ -302,5 +328,7 @@
     <script src="scripts/auth.js"></script>
     <script type="module" src="scripts/books.js"></script>
     <script type="module" src="scripts/wishlist.js"></script>
+    <script src="scripts/ai-chatbot.js"></script>
+    <script src="scripts/ai-features.js"></script>
 </body>
 </html>

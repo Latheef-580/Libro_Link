@@ -32,21 +32,29 @@ class BookDetailsManager {
 
     async loadBooks() {
         try {
-            // Load books from sampleData.json
+            // Load books from API
             let sampleDataBooks = [];
             try {
-                const response = await fetch('/database/sampleData.json');
+                const response = await fetch('/api/books');
                 const data = await response.json();
                 sampleDataBooks = Array.isArray(data.books) ? data.books : [];
-                console.log('[BookDetails] Loaded sampleData books:', sampleDataBooks.length);
+                console.log('[BookDetails] Loaded API books:', sampleDataBooks.length);
             } catch (e) {
-                console.log('[BookDetails] Error loading sampleData.json:', e);
-                sampleDataBooks = [];
+                console.log('[BookDetails] Error loading books from API, trying sample data:', e);
+                try {
+                    const sampleResponse = await fetch('/api/books/sample');
+                    const sampleData = await sampleResponse.json();
+                    sampleDataBooks = Array.isArray(sampleData.books) ? sampleData.books : [];
+                    console.log('[BookDetails] Loaded books from sample data:', sampleDataBooks.length);
+                } catch (sampleError) {
+                    console.log('[BookDetails] Sample data route also failed:', sampleError);
+                    sampleDataBooks = [];
+                }
             }
 
             // Normalize sampleData books to match expected format
             const normalizedSampleBooks = sampleDataBooks.map(book => ({
-                id: book.id,
+                id: book.id || book._id,
                 title: book.title,
                 author: book.author,
                 price: book.price,
@@ -223,7 +231,7 @@ class BookDetailsManager {
         console.log('[BookDetails] Book IDs:', this.books.map(b => b.id));
         
         if (bookId) {
-            this.book = this.books.find(book => String(book.id) === String(bookId));
+            this.book = this.books.find(book => String(book.id || book._id) === String(bookId));
             console.log('[BookDetails] Found book:', this.book);
             
             if (this.book) {
@@ -473,7 +481,7 @@ class BookDetailsManager {
         this.updateCartCount();
     }
 
-    handleReviewSubmit(e) {
+    async handleReviewSubmit(e) {
         e.preventDefault();
         
         // Check if user is logged in
@@ -495,13 +503,44 @@ class BookDetailsManager {
             return;
         }
 
-        // In a real app, this would be sent to the server
-        if (window.showNotification) {
-            window.showNotification('Review submitted successfully!', 'success');
+        // Add review to the book
+        if (!this.book.reviews) {
+            this.book.reviews = [];
         }
+
+        const newReview = {
+            user: currentUser.name || currentUser.email,
+            rating: parseInt(rating),
+            comment: comment.trim(),
+            date: new Date().toISOString()
+        };
+
+        this.book.reviews.push(newReview);
+        
+        // Update average rating
+        const totalRating = this.book.reviews.reduce((sum, review) => sum + review.rating, 0);
+        this.book.rating = totalRating / this.book.reviews.length;
+
+        // Update the display
+        this.displayBookDetails();
         
         // Reset form
         e.target.reset();
+        
+        // Analyze sentiment for the new review
+        if (window.aiContentAnalysis) {
+            const reviewElement = document.querySelector('.review-item:last-child');
+            if (reviewElement) {
+                await window.aiContentAnalysis.updateReviewSentiment(reviewElement, comment);
+            }
+            
+            // Update overall sentiment
+            await window.aiContentAnalysis.updateOverallSentiment(this.book.reviews);
+        }
+
+        if (window.showNotification) {
+            window.showNotification('Review submitted successfully!', 'success');
+        }
     }
 
     updateWishlistButton() {

@@ -1,0 +1,18 @@
+{
+  "name": "librolink",
+  "version": "1.0.0",
+  "description": "AI-powered book marketplace",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "dev": "nodemon backend/server.js",
+    "build": "echo 'No build step required'",
+    "install-deps": "cd backend && npm install"
+  },
+  "keywords": ["ai", "books", "marketplace", "nodejs", "express"],
+  "author": "Your Name",
+  "license": "MIT",
+  "engines": {
+    "node": ">=16.0.0"
+  }
+} 

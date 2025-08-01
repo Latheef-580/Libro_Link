@@ -25,6 +25,28 @@ app.get('/test', (req, res) => {
     res.json({ message: 'Server is working!' });
 });
 
+// Sample data route
+app.get('/api/books/sample', (req, res) => {
+    try {
+        const sampleData = require('../database/sampleData.json');
+        res.json(sampleData);
+    } catch (error) {
+        console.error('Error loading sample data:', error);
+        res.status(500).json({ error: 'Failed to load sample data' });
+    }
+});
+
+// Books API route (fallback to sample data)
+app.get('/api/books', (req, res) => {
+    try {
+        const sampleData = require('../database/sampleData.json');
+        res.json(sampleData);
+    } catch (error) {
+        console.error('Error loading books:', error);
+        res.status(500).json({ error: 'Failed to load books' });
+    }
+});
+
 // Admin login route
 app.post('/api/admin/login', (req, res) => {
     const { username, password } = req.body;

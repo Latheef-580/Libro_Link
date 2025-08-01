@@ -3,8 +3,20 @@ const express = require('express');
 const { body, query } = require('express-validator');
 const bookController = require('../controllers/bookController');
 const { authMiddleware, sellerMiddleware } = require('../middleware/auth');
+const path = require('path');
 
 const router = express.Router();
+
+// Development route to serve sample data directly
+router.get('/sample', (req, res) => {
+    try {
+        const sampleData = require('../../database/sampleData.json');
+        res.json(sampleData);
+    } catch (error) {
+        console.error('Error loading sample data:', error);
+        res.status(500).json({ error: 'Failed to load sample data' });
+    }
+});
 
 // Get all books with filtering and pagination
 router.get('/', [

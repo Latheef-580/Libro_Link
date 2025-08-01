@@ -94,7 +94,7 @@
                         </div>
                         <div class="meta-item">
                             <span class="meta-label">Price:</span>
-                            <span id="book-price" class="price">$0.00</span>
+                            <span id="book-price" class="price">₹0.00</span>
                         </div>
                         <div class="meta-item">
                             <span class="meta-label">Seller:</span>
@@ -117,6 +117,14 @@
             
             <div class="book-reviews-section">
                 <h3>Reviews</h3>
+                <div class="reviews-header">
+                    <div class="sentiment-summary" id="sentimentSummary" style="display: none;">
+                        <span class="sentiment-label">Overall Sentiment:</span>
+                        <span class="sentiment-indicator" id="overallSentiment">
+                            <i class="fas fa-smile"></i> Positive
+                        </span>
+                    </div>
+                </div>
                 <div id="reviews-list">
                     <p>No reviews yet.</p>
                 </div>
@@ -185,5 +193,6 @@
     <script type="module" src="scripts/auth.js"></script>
     <script type="module" src="scripts/main.js"></script>
     <script type="module" src="scripts/book-details.js"></script>
+    <script src="scripts/ai-content-analysis.js"></script>
 </body>
 </html> 

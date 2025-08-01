@@ -394,7 +394,7 @@ class WishlistManager {
             <div class="price-alerts">
                 <span class="price-drop-alert">
                     <i class="fas fa-trending-down"></i>
-                    Price dropped ${formatUsdToInr((item.originalPrice || safePrice) - safePrice)}
+                    Price dropped ${formatInr((item.originalPrice || safePrice) - safePrice)}
                 </span>
             </div>
         ` : '';
@@ -1029,13 +1029,13 @@ window.testCurrencyConversion = function() {
     const testPrices = [12.99, 25.50, 0, 100, 5.99];
     
     testPrices.forEach(price => {
-        console.log(`$${price} = ${formatUsdToInr(price)}`);
+        console.log(`₹${price} = ${formatInr(price)}`);
     });
     
     console.log('[Debug] Exchange rate:', getExchangeRate());
     return testPrices.map(price => ({
-        usd: price,
-        inr: formatUsdToInr(price)
+        price: price,
+        inr: formatInr(price)
     }));
 };
 

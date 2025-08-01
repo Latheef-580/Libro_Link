@@ -158,14 +158,23 @@ class BooksManager {
     }
 
     async loadBooks() {
-        // Fetch books from sampleData.json
+        // Fetch books from API
         let sampleDataBooks = [];
         try {
-            const response = await fetch('/database/sampleData.json');
+            const response = await fetch('/api/books');
             const data = await response.json();
             sampleDataBooks = Array.isArray(data.books) ? data.books : [];
         } catch (e) {
-            sampleDataBooks = [];
+            console.log('[Books] Main API failed, trying sample data route...');
+            try {
+                const sampleResponse = await fetch('/api/books/sample');
+                const sampleData = await sampleResponse.json();
+                sampleDataBooks = Array.isArray(sampleData.books) ? sampleData.books : [];
+                console.log('[Books] Loaded books from sample data:', sampleDataBooks.length);
+            } catch (sampleError) {
+                console.log('[Books] Sample data route also failed:', sampleError);
+                sampleDataBooks = [];
+            }
         }
 
         // Fetch books from global_books in localStorage
@@ -176,8 +185,9 @@ class BooksManager {
         const allBooks = [...sampleDataBooks, ...globalBooks];
         const seenIds = new Set();
         const uniqueBooks = allBooks.filter(book => {
-            if (seenIds.has(String(book.id))) return false;
-            seenIds.add(String(book.id));
+            const bookId = String(book.id || book._id);
+            if (seenIds.has(bookId)) return false;
+            seenIds.add(bookId);
             return true;
         });
 
@@ -206,7 +216,7 @@ class BooksManager {
     async fetchBooks() {
         let sampleDataBooks = [];
         try {
-            const response = await fetch('/database/sampleData.json');
+            const response = await fetch('/api/books');
             const data = await response.json();
             sampleDataBooks = (data.books || []).map(book => ({
                 id: book.id,
@@ -237,8 +247,9 @@ class BooksManager {
         const allBooks = [...sampleDataBooks, ...hardcodedBooks];
         const seenIds = new Set();
         const uniqueBooks = allBooks.filter(book => {
-            if (seenIds.has(String(book.id))) return false;
-            seenIds.add(String(book.id));
+            const bookId = String(book.id || book._id);
+            if (seenIds.has(bookId)) return false;
+            seenIds.add(bookId);
             return true;
         });
 
@@ -452,14 +463,23 @@ class BooksManager {
     }
 
     async refreshBooksFromStorage() {
-        // Fetch books from sampleData.json
+        // Fetch books from API
         let sampleDataBooks = [];
         try {
-            const response = await fetch('/database/sampleData.json');
+            const response = await fetch('/api/books');
             const data = await response.json();
             sampleDataBooks = Array.isArray(data.books) ? data.books : [];
         } catch (e) {
-            sampleDataBooks = [];
+            console.log('[Books] Main API failed during refresh, trying sample data route...');
+            try {
+                const sampleResponse = await fetch('/api/books/sample');
+                const sampleData = await sampleResponse.json();
+                sampleDataBooks = Array.isArray(sampleData.books) ? sampleData.books : [];
+                console.log('[Books] Refreshed books from sample data:', sampleDataBooks.length);
+            } catch (sampleError) {
+                console.log('[Books] Sample data route also failed during refresh:', sampleError);
+                sampleDataBooks = [];
+            }
         }
         // Fetch books from global_books in localStorage
         const globalBooksKey = 'global_books';
@@ -468,8 +488,9 @@ class BooksManager {
         const allBooks = [...sampleDataBooks, ...globalBooks];
         const seenIds = new Set();
         const uniqueBooks = allBooks.filter(book => {
-            if (seenIds.has(String(book.id))) return false;
-            seenIds.add(String(book.id));
+            const bookId = String(book.id || book._id);
+            if (seenIds.has(bookId)) return false;
+            seenIds.add(bookId);
             return true;
         });
         this.books = uniqueBooks;
@@ -725,7 +746,7 @@ class BooksManager {
         if (this.currentUser) {
             wishlist = JSON.parse(localStorage.getItem(wishlistKey) || '[]');
         }
-        const isInWishlist = wishlist.some(item => String(item.id) === String(book.id));
+        const isInWishlist = wishlist.some(item => String(item.id) === String(book.id || book._id));
         const discountPercent = book.originalPrice ? 
             Math.round((1 - book.price / book.originalPrice) * 100) : 0;
         // If seller book, show INR directly
@@ -745,7 +766,7 @@ class BooksManager {
             priceHtml = formatPriceRange(book.price, book.originalPrice);
         }
         return `
-            <div class="book-card" data-book-id="${book.id}">
+            <div class="book-card" data-book-id="${book.id || book._id}">
                 <div class="book-image">
                     <img src="${book.image || book.coverImage || '/assets/images/placeholder-book.jpg'}" 
                          alt="${book.title}" loading="lazy">
@@ -767,11 +788,11 @@ class BooksManager {
                         <small>Sold by ${book.seller}</small>
                     </div>
                     <div class="book-actions">
-                        <button class="btn btn-primary btn-add-cart" data-book-id="${book.id}">
+                        <button class="btn btn-primary btn-add-cart" data-book-id="${book.id || book._id}">
                             Add to Cart
                         </button>
                         <button class="btn-wishlist ${isInWishlist ? 'active' : ''}" 
-                                data-book-id="${book.id}" title="Add to Wishlist">
+                                data-book-id="${book.id || book._id}" title="Add to Wishlist">
                             <i class="fas fa-heart"></i>
                         </button>
                     </div>
@@ -799,7 +820,7 @@ class BooksManager {
             priceHtml = formatPriceRange(book.price, book.originalPrice);
         }
         return `
-            <div class="book-list-item" data-book-id="${book.id}">
+            <div class="book-list-item" data-book-id="${book.id || book._id}">
                 <div class="book-image">
                     <img src="${book.image || book.coverImage || '/assets/images/placeholder-book.jpg'}" alt="${book.title}" loading="lazy">
                     ${book.availability === 'out-of-stock' ? '<div class="stock-badge">Out of Stock</div>' : ''}
@@ -986,7 +1007,7 @@ class BooksManager {
             return;
         }
 
-        const book = this.books.find(b => String(b.id) === String(bookId));
+        const book = this.books.find(b => String(b.id || b._id) === String(bookId));
         if (!book) {
             this.showNotification('Book not found', 'error');
             return;
@@ -1027,7 +1048,7 @@ class BooksManager {
             } else {
                 // Add to wishlist
                 const wishlistItem = {
-                    id: book.id,
+                    id: book.id || book._id,
                     title: book.title,
                     author: book.author,
                     price: book.price,
@@ -1070,7 +1091,7 @@ class BooksManager {
             return;
         }
 
-        const book = this.books.find(b => String(b.id) === String(bookId));
+        const book = this.books.find(b => String(b.id || b._id) === String(bookId));
         console.log('[Books] Found book:', book);
         
         // Check availability - books from sampleData.json use 'status', hardcoded books use 'availability'
@@ -1090,7 +1111,7 @@ class BooksManager {
             this.showNotification(`"${book.title}" is already in your cart`, 'info');
         } else {
             cart.push({
-                id: book.id,
+                id: book.id || book._id,
                 title: book.title,
                 author: book.author,
                 price: book.price,

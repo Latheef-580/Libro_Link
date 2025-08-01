@@ -47,14 +47,28 @@ async function seedDatabase() {
             const bookData = sampleData.books[i];
             const seller = users[Math.floor(Math.random() * 5)]; // First 5 users are sellers
             
+            // Fix category mapping
+            let category = bookData.category.toLowerCase();
+            if (category === "children's books") {
+                category = "children";
+            }
+            
+            // Fix condition mapping
+            let condition = bookData.condition.toLowerCase().replace(' ', '-');
+            if (condition === 'fair') {
+                condition = 'acceptable';
+            } else if (condition === 'excellent') {
+                condition = 'like-new';
+            }
+            
             const book = new Book({
                 title: bookData.title,
                 author: bookData.author,
                 isbn: bookData.isbn,
                 description: bookData.description,
-                category: bookData.category.toLowerCase(),
+                category: category,
                 genre: bookData.genre,
-                condition: bookData.condition.toLowerCase().replace(' ', '-'),
+                condition: condition,
                 price: bookData.price,
                 originalPrice: bookData.originalPrice,
                 seller: seller._id,

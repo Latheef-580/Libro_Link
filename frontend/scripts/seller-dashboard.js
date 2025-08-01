@@ -533,7 +533,7 @@ class SellerDashboard {
                     <div class="order-meta">
                         <span><i class="fas fa-calendar"></i> ${this.formatDate(order.dateCreated)}</span>
                         <span><i class="fas fa-user"></i> ${order.customerName}</span>
-                        <span><i class="fas fa-dollar-sign"></i> ${formatInr(order.total)}</span>
+                        <span><i class="fas fa-rupee-sign"></i> ${formatInr(order.total)}</span>
                     </div>
                     <div class="order-actions">
                         <button class="btn btn-small btn-primary" onclick="sellerDashboard.updateOrderStatus('${order.id}', 'shipped')">

@@ -87,8 +87,8 @@ class LibroLink {
                 this.loadUserWishlist();
             }
 
-            // Load sample data (in production, this would come from API)
-            const response = await fetch('/database/sampleData.json');
+            // Load data from API
+            const response = await fetch('/api/books');
             
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);

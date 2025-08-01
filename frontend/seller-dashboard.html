@@ -137,7 +137,7 @@
                             </div>
                             <div class="stat-card">
                                 <div class="stat-icon">
-                                    <i class="fas fa-dollar-sign"></i>
+                                    <i class="fas fa-rupee-sign"></i>
                                 </div>
                                 <div class="stat-info">
                                     <h3 id="totalEarnings">₹0.00</h3>
@@ -258,7 +258,15 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="bookDescription">Description *</label>
-                                    <textarea id="bookDescription" name="description" rows="4" placeholder="Describe the book's content and condition..." required></textarea>
+                                    <div class="description-container">
+                                        <textarea id="bookDescription" name="description" rows="4" placeholder="Describe the book's content and condition..." required></textarea>
+                                        <button type="button" class="btn btn-sm btn-outline" id="generateDescriptionBtn">
+                                            <i class="fas fa-robot"></i> Generate AI Description
+                                        </button>
+                                    </div>
+                                    <div class="ai-description-loading" id="aiDescriptionLoading" style="display: none;">
+                                        <i class="fas fa-spinner fa-spin"></i> Generating AI description...
+                                    </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="bookPreview">Preview Text</label>
@@ -273,6 +281,9 @@
                                         <div class="input-group">
                                             <span class="input-prefix">₹</span>
                                             <input type="number" id="bookPrice" name="price" min="0" step="0.01" required>
+                                            <button type="button" class="btn btn-sm btn-outline" id="optimizePriceBtn">
+                                                <i class="fas fa-chart-line"></i> Optimize
+                                            </button>
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -281,6 +292,15 @@
                                             <span class="input-prefix">₹</span>
                                             <input type="number" id="bookOriginalPrice" name="originalPrice" min="0" step="0.01" placeholder="If discounted">
                                         </div>
+                                    </div>
+                                </div>
+                                <!-- Price Optimization Results -->
+                                <div class="price-optimization-results" id="priceOptimizationResults" style="display: none;">
+                                    <div class="optimization-header">
+                                        <h4><i class="fas fa-chart-line"></i> Price Optimization</h4>
+                                    </div>
+                                    <div class="optimization-content" id="optimizationContent">
+                                        <!-- Optimization results will be displayed here -->
                                     </div>
                                 </div>
                                 <div class="form-row">
@@ -385,8 +405,8 @@
                     <!-- Analytics Tab -->
                     <div class="tab-content" id="analytics">
                         <div class="content-header">
-                            <h2>Analytics</h2>
-                            <p>Track your selling performance</p>
+                            <h2>Analytics & Trends</h2>
+                            <p>Track your selling performance and market trends</p>
                         </div>
                         
                         <div class="analytics-container" id="analyticsContainer">
@@ -402,6 +422,38 @@
                                     <h3>Top Performing Books</h3>
                                     <div class="top-books-list">
                                         <p>No books listed yet</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Market Trends Section -->
+                            <div class="trends-section">
+                                <div class="trends-header">
+                                    <h3><i class="fas fa-chart-line"></i> Market Trends</h3>
+                                    <div class="trends-controls">
+                                        <select id="trendPeriod">
+                                            <option value="7d">Last 7 Days</option>
+                                            <option value="30d" selected>Last 30 Days</option>
+                                        </select>
+                                        <button class="btn btn-sm btn-outline" id="refreshTrendsBtn">
+                                            <i class="fas fa-sync-alt"></i> Refresh
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div class="trends-grid">
+                                    <div class="trends-card">
+                                        <h4>Trending Books</h4>
+                                        <div class="trending-books-list" id="trendingBooksList">
+                                            <p>Loading trending books...</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="trends-card">
+                                        <h4>Category Trends</h4>
+                                        <div class="category-trends-list" id="categoryTrendsList">
+                                            <p>Loading category trends...</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -484,5 +536,7 @@
     <script type="module" src="scripts/main.js"></script>
     <script type="module" src="scripts/seller-dashboard.js"></script>
     <script type="module" src="scripts/auth.js"></script>
+    <script src="scripts/ai-chatbot.js"></script>
+    <script src="scripts/ai-content-analysis.js"></script>
 </body>
 </html>
